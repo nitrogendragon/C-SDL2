@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
 {
 	game = new Game();
 
-	game->init("DuncanCorpEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 820, true);
+	game->init("DuncanCorpEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 820, false);
 	while (game->running()) 
 	{
 		game->handleEvents();
