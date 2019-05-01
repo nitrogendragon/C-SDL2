@@ -67,8 +67,9 @@ void Game::handleEvents()
 void Game::update()
 {
 	cnt++;
-	destR.h = 32;
-	destR.w = 32;
+	destR.h = 64;
+	destR.w = 64;
+	destR.x = cnt;
 	cout << cnt << endl;
 }
 void Game::render()
