@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	int frameTime;
 	game = new Game();
 
-	game->init("DuncanCorpEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 820, false);
+	game->init("DuncanCorpEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920,1024, false);
 	while (game->running()) 
 	{
 		frameStart = SDL_GetTicks();

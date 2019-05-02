@@ -6,6 +6,9 @@
 GameObject* player;//player GameObject
 GameObject* enemy;//enemy GameObject
 
+SDL_Renderer* Game::renderer = nullptr;
+
+
 Game::Game()
 {
 
@@ -44,8 +47,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = true;//we are running
 	}
 
-	player = new GameObject("Assets/ninjagirl.png", renderer,10,10,93,93,1.0,1.0);//creates/renders player GameObject
-	enemy = new GameObject("Assets/firsttry.png", renderer, 50, 10, 300, 200, .5, .5);//creates/renders player GameObject
+	player = new GameObject("Assets/ninjagirl.png",10,10,93,93,1.0,1.0);//creates/renders player GameObject
+	enemy = new GameObject("Assets/firsttry.png",50,10,300,200,.5,.5);//creates/renders player GameObject
 	
 }
 

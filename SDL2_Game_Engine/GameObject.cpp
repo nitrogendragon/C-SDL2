@@ -2,10 +2,9 @@
 #include"TextureManager.h"
 
 // creates and renders our gameobject based off the texturesheet, positions, and given dimensions / scaling based off of source dimensions
-GameObject::GameObject(const char* texturesheet, SDL_Renderer* ren, int x, int y, int srcRectH, int srcRectW, float hScale, float wScale)
+GameObject::GameObject(const char* texturesheet, int x, int y, int srcRectH, int srcRectW, float hScale, float wScale)
 {
-	renderer = ren; //Sets our GameObjects SDL_Renderer renderer to whatever ren is
-	objTexture = TextureManager::LoadTexture(texturesheet, ren);//loads and renders our GameObjects texture
+	objTexture = TextureManager::LoadTexture(texturesheet);//loads and renders our GameObjects texture
 	xpos = x;
 	ypos = y;
 	srcRect.h = srcRectH;//source dimension height for GameObject texture
@@ -35,5 +34,5 @@ void GameObject::Update()
 
 void GameObject::Render()
 {
-	SDL_RenderCopy(renderer, objTexture, &srcRect, &destRect);//copies specified portion of the GameObject texture to the rendering target which is our GameObject renderer
+	SDL_RenderCopy(Game::renderer, objTexture, &srcRect, &destRect);//copies specified portion of the GameObject texture to the rendering target which is our GameObject renderer
 }
