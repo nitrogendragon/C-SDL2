@@ -5,7 +5,7 @@
 
 GameObject* player;//player GameObject
 GameObject* enemy;//enemy GameObject
-
+Map* map;
 SDL_Renderer* Game::renderer = nullptr;
 
 
@@ -46,10 +46,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		isRunning = true;//we are running
 	}
-
+	
 	player = new GameObject("Assets/ninjagirl.png",10,10,93,93,1.0,1.0);//creates/renders player GameObject
 	enemy = new GameObject("Assets/firsttry.png",50,10,300,200,.5,.5);//creates/renders player GameObject
-	
+	map = new Map(0,0,32,32,1.0,1.0);//makes a new map
 }
 
 void Game::handleEvents() //function for handling game events
@@ -74,6 +74,7 @@ void Game::update()//function for updating the game
 void Game::render()//function for rendering the game
 {
 	SDL_RenderClear(renderer);//clears the rendering target which in this case is our Game class renderer
+	map->DrawMap();//draws our map for us
 	//this is where we add stuff to render
 	//order determines layer.. first in the back last in the front
 	player->Render();//renders our player

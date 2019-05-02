@@ -9,14 +9,9 @@ SDL_Texture* TextureManager::LoadTexture(const char* texture)
 	return tex;//returns our new texture tex
 }
 
-
-TextureManager::TextureManager()
+void TextureManager::Draw(SDL_Texture* tex, SDL_Rect src, SDL_Rect dest)
 {
-
+	SDL_RenderCopy(Game::renderer, tex, &src, &dest);
 }
 
 
-TextureManager::~TextureManager()
-{
-
-}
