@@ -30,9 +30,9 @@ int lvl1[20][25] =
 Map::Map(int x, int y, int srcRectH, int srcRectW, float hScale, float wScale)//creates map with params x and y for src location(probably both 0), src height and width(probably base dimensions of img, and scale for height and width via H/WScale(will vary but 1 would be good to start with)
 {
 	
-	dirt = TextureManager::LoadTexture("Assets/simpleground.png");//loads dirt texture
-	grass = TextureManager::LoadTexture("Assets/simplegrass.png");//loads grass texture
-	water = TextureManager::LoadTexture("Assets/simplewater.png");//loads water texture
+	dirt = TextureManager::LoadTexture("Assets/simpleground_32x32.png");//loads dirt texture
+	grass = TextureManager::LoadTexture("Assets/simplegrass_32x32.png");//loads grass texture
+	water = TextureManager::LoadTexture("Assets/simplewater_32x32.png");//loads water texture
 	LoadMap(lvl1);//loads our lvl1 map 2D array
 	src.x = 0;//starting x point basically beginning of img
 	src.y = 0;//starting y point basically beginning of img

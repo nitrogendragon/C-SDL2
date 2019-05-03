@@ -20,11 +20,11 @@ public:
 	//return ypos so we can get the value
 	int y() { return ypos; }
 	//like unity onAwake so as it starts up we set the x and y pos to 0
-	void init() override
+	/*void init() override
 	{
 		xpos = 0;
 		ypos = 0;
-	}
+	}*/
 
 	void update() override
 	{
