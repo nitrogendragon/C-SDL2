@@ -69,11 +69,13 @@ public:
 	void update()
 	{
 		//loops through entities components to call update for each component, uses reference named c to reference components
-		for (auto& c : components) c->update();
-		//loops through entities components to call draw for each component, uses reference named c to reference components
+		for (auto& c : components) c->update();	
+	}
+	//loops through entities components to call draw for each component, uses reference named c to reference components
+	void draw() 
+	{
 		for (auto& c : components) c->draw();
 	}
-	void draw() {}
 	/* function to see if its active, using const because it won't change*/
 	bool isActive() const { return active; }
 	/*arms any given component, because our component has a reference to the owner, we can call the entities
