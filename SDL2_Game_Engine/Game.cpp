@@ -2,12 +2,16 @@
 #include "Game.h"
 #include "TextureManager.h"
 #include "GameObject.h"
-
+#include "ECS.h"
+#include "Components.h"
 GameObject* player;//player GameObject
 GameObject* enemy;//enemy GameObject
 Map* map;
 SDL_Renderer* Game::renderer = nullptr;
-
+//creates a Manager class instance manager in our game
+Manager manager;
+//adds a newplayer Entity to/via our manager
+auto& newPlayer(manager.addEntity());
 
 Game::Game()
 {
@@ -50,6 +54,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player = new GameObject("Assets/ninjagirl.png",10,10,93,93,1.0,1.0);//creates/renders player GameObject
 	enemy = new GameObject("Assets/firsttry.png",50,10,300,200,.5,.5);//creates/renders player GameObject
 	map = new Map(0,0,32,32,1.0,1.0);//makes a new map
+
+	newPlayer.addComponent<PositionComponent>();
+	newPlayer.getComponent<PositionComponent>().setPos(500, 500);
+	
 }
 
 void Game::handleEvents() //function for handling game events
@@ -70,6 +78,10 @@ void Game::update()//function for updating the game
 {
 	player->Update();//runs players update function
 	enemy->Update();//runs enemy update function
+	manager.update();//runs the managers update function to update all the components
+	//prints out our newPlayers x and y coordinates every update
+	cout << newPlayer.getComponent<PositionComponent>().x() << ";" <<
+		newPlayer.getComponent<PositionComponent>().y() << endl;
 }
 void Game::render()//function for rendering the game
 {

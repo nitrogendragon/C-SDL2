@@ -8,7 +8,7 @@
 using namespace std;
 class Component;//declare Component class
 class Entity;// declare Entity class
-
+//sets up ComponentID as an unsigned int
 using ComponentID = size_t;
 //inline acts a bit like header file, puts the code exactly where we use the function. here it will grab the components Id
 inline ComponentID getComponentTypeID() 
@@ -19,8 +19,8 @@ inline ComponentID getComponentTypeID()
 //inline template w/o exception using typename T and running getComponentID(), returns typeID
 template<typename T> inline ComponentID getComponentTypeID() noexcept
 {
-	static ComponentID typeID = getComponentTypeId();//generates new lastID and puts it in our typeID
-	return typeID();//returns the typeID for the component
+	static ComponentID typeID = getComponentTypeID();//generates new lastID and puts it in our typeID
+	return typeID;//returns the typeID for the component
 }
 
 constexpr size_t maxComponents = 32;//max number of components an entity is able to hold
@@ -107,7 +107,7 @@ public:
 	template<typename T> T& getComponent() const
 	{
 		//set ptr to the position in our component array
-		auto ptr(componentArray[getComponentTypeID<T>()])
+		auto ptr(componentArray[getComponentTypeID<T>()]);
 
 		return *static_cast<T*>(ptr);
 	}
