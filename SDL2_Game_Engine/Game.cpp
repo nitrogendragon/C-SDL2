@@ -9,7 +9,7 @@ Map* map;
 SDL_Renderer* Game::renderer = nullptr;
 //creates a Manager class instance manager in our game
 Manager manager;
-//adds a newplayer Entity to/via our manager
+//creates and adds a player Entity to our manager
 auto& player(manager.addEntity());
 
 Game::Game()
@@ -51,8 +51,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 	
 	map = new Map(0,0,32,32,1.0,1.0);//makes a new map
-	player.addComponent<PositionComponent>();
-	player.addComponent<SpriteComponent>("Assets/rogueone.png");
+	//gives our player a position component
+	player.addComponent<PositionComponent>(100,100);
+	//gives our player a sprite component and sets it to rogueone
+	player.addComponent<SpriteComponent>("Assets/ninjagirl_66x88.png",0,0,66,88,.5,.5);
 	
 	
 }
@@ -83,7 +85,7 @@ void Game::render()//function for rendering the game
 {
 	SDL_RenderClear(renderer);//clears the rendering target which in this case is our Game class renderer
 	map->DrawMap();//draws our map for us
-	manager.draw();
+	manager.draw();//runs the manager draw fucntion to draw  entities
 	//this is where we add stuff to render
 	//order determines layer.. first in the back last in the front
 
