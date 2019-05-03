@@ -1,17 +1,16 @@
 
 #include "Game.h"
 #include "TextureManager.h"
-#include "GameObject.h"
-#include "ECS.h"
-#include "Components.h"
-GameObject* player;//player GameObject
-GameObject* enemy;//enemy GameObject
+#include "Map.h"
+#include "ECS/Components.h"
+
+
 Map* map;
 SDL_Renderer* Game::renderer = nullptr;
 //creates a Manager class instance manager in our game
 Manager manager;
 //adds a newplayer Entity to/via our manager
-auto& newPlayer(manager.addEntity());
+auto& player(manager.addEntity());
 
 Game::Game()
 {
@@ -51,12 +50,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = true;//we are running
 	}
 	
-	player = new GameObject("Assets/ninjagirl.png",10,10,93,93,1.0,1.0);//creates/renders player GameObject
-	enemy = new GameObject("Assets/firsttry.png",50,10,300,200,.5,.5);//creates/renders player GameObject
 	map = new Map(0,0,32,32,1.0,1.0);//makes a new map
-
-	newPlayer.addComponent<PositionComponent>();
-	newPlayer.getComponent<PositionComponent>().setPos(500, 500);
+	player.addComponent<PositionComponent>();
+	player.addComponent<SpriteComponent>("Assets/rogueone.png");
+	
 	
 }
 
@@ -76,21 +73,20 @@ void Game::handleEvents() //function for handling game events
 }
 void Game::update()//function for updating the game
 {
-	player->Update();//runs players update function
-	enemy->Update();//runs enemy update function
-	manager.update();//runs the managers update function to update all the components
-	//prints out our newPlayers x and y coordinates every update
-	cout << newPlayer.getComponent<PositionComponent>().x() << ";" <<
-		newPlayer.getComponent<PositionComponent>().y() << endl;
+	//moving through our games entities each frame and getting rid of those that aren't there/active anymore
+	manager.refresh();
+	//runs the managers update function to update all the components
+	manager.update();
+	
 }
 void Game::render()//function for rendering the game
 {
 	SDL_RenderClear(renderer);//clears the rendering target which in this case is our Game class renderer
 	map->DrawMap();//draws our map for us
+	manager.draw();
 	//this is where we add stuff to render
 	//order determines layer.. first in the back last in the front
-	player->Render();//renders our player
-	enemy->Render();//renders our enemy
+
 	SDL_RenderPresent(renderer);//updates the screen with the new renderer renderings
 }
 void Game::clean()//clear game of memory

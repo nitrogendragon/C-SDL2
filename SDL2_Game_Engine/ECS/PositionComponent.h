@@ -1,5 +1,6 @@
 #pragma once
 #include "ECS.h"
+//component class for getting, setting up, and updating x,y position of entities
 class PositionComponent : public Component
 {
 private:
@@ -8,6 +9,12 @@ private:
 	//ypos for component
 	int	ypos;
 public:
+	
+	PositionComponent(int x=0, int y=0)
+	{
+		xpos = x;
+		ypos = y;
+	}
 	//return xpos so we can get the value
 	int x() { return xpos; }
 	//return ypos so we can get the value
@@ -33,4 +40,3 @@ public:
 
 
 };
-
