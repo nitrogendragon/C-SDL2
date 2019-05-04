@@ -52,7 +52,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	
 	map = new Map(0,0,32,32,1.0,1.0);//makes a new map
 	//gives our player a position component
-	player.addComponent<PositionComponent>(100,100);
+	player.addComponent<TransformComponent>(100,100);
 	//gives our player a sprite component and sets it to rogueone
 	player.addComponent<SpriteComponent>("Assets/ninjagirl_66x88.png",0,0,66,88,.5,.5);
 	

@@ -1,7 +1,7 @@
 #pragma once
 #include "ECS.h"
 //component class for getting, setting up, and updating x,y position of entities
-class PositionComponent : public Component
+class TransformComponent : public Component
 {
 private:
 	//xpos for component
@@ -10,7 +10,7 @@ private:
 	int	ypos;
 public:
 	
-	PositionComponent(int x=0, int y=0)
+	TransformComponent(int x=0, int y=0)
 	{
 		xpos = x;
 		ypos = y;
