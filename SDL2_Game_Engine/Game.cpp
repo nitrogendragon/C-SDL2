@@ -73,8 +73,30 @@ void Game::handleEvents() //function for handling game events
 			break;//break out of the switch statement
 	}
 }
+//temporary counter for showing dmg dealt example via texswapping
+//int cnt = 0;
 void Game::update()//function for updating the game
 {
+	//example for animating dmg so to speak via color changing
+	/*if (player.getComponent<PositionComponent>().x() > 100 && cnt < 1)
+	{
+		player.getComponent<SpriteComponent>().setTex("Assets/ninjagirl_damaged_66x88.png");
+	}
+	else 
+	{ 
+		player.getComponent<SpriteComponent>().setTex("Assets/ninjagirl_66x88.png"); 
+	}
+	if (cnt < 2) 
+	{
+		cnt++;
+	}
+	else
+	{
+		cnt = 0;
+	}*/
+			
+		
+	
 	//moving through our games entities each frame and getting rid of those that aren't there/active anymore
 	manager.refresh();
 	//runs the managers update function to update all the components

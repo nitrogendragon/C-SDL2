@@ -20,14 +20,19 @@ public:
 	//create sprite component based path to texture img, starting img render points, number of horizontalxvertical pixels of source to render, and scaling
 	SpriteComponent(const char* path, int x, int y, int srcRectH, int srcRectW, float destWScale, float destHScale)
 	{
-		//creates texture by loading our image
-		texture = TextureManager::LoadTexture(path);
+		//creates texture by loading our image using setTex function defined afterour function here
+		setTex(path);
 		sRectY = x;//setting x starting value render point of sprite img to our declared pixel point
 		sRectY = y;//setting y starting value render point of sprite img to our declared pixel point
 		sRectH = srcRectH;//source dimension height for GameObject texture
 		sRectW = srcRectW;//source dimension width for GameObject texture
 		destWScale = srcRect.w * destWScale;// window width dimension for GameObject texture
 		destHScale = srcRect.h * destHScale;// window height dimension for GameObject texture
+	}
+	//set texture function taking in a path to a img so that we can set or swap textures
+	void setTex(const char* path)
+	{
+		texture = TextureManager::LoadTexture(path);
 	}
 
 	void init() override
@@ -43,9 +48,9 @@ public:
 		//source dimension width for GameObject texture
 		srcRect.w = sRectW;
 		// window width scaling dimension for sprite
-		destRect.w = srcRect.w * destWScale;
+		destRect.w = int(srcRect.w * destWScale);
 		// window height scaling dimension for sprite
-		destRect.h = srcRect.h * destHScale;
+		destRect.h = int(srcRect.h * destHScale);
 	}
 
 	void update() override
