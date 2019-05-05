@@ -5,7 +5,7 @@ class SpriteComponent: public Component
 {
 private:
 	//reference to the position of the sprite
-	TransformComponent *position;
+	TransformComponent *transform;
 	//texture for the sprite 
 	SDL_Texture *texture;
 	//rects for sizing and scaling sprite
@@ -37,7 +37,7 @@ public:
 
 	void init() override
 	{
-		position = &entity->getComponent<TransformComponent>();
+		transform = &entity->getComponent<TransformComponent>();
 		
 		//setting x starting render point of sprite img to our declared pixel point
 		srcRect.x = sRectX;
@@ -56,9 +56,9 @@ public:
 	void update() override
 	{
 		//sets our sprites x position to the x position of the entity
-		destRect.x = position->x();
+		destRect.x = (int)transform->position.x;
 		//sets our sprites y position to the y position of the entity
-		destRect.y = position->y();
+		destRect.y = (int)transform->position.y;
 	}
 	//draws our sprite using the specified texture, pixel selection, and scaling
 	void draw() override

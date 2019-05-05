@@ -3,10 +3,12 @@
 #include "TextureManager.h"
 #include "Map.h"
 #include "ECS/Components.h"
+#include "Vector2D.h"
 
 
 Map* map;
 SDL_Renderer* Game::renderer = nullptr;
+SDL_Event Game::event;//SDL_Event event variable
 //creates a Manager class instance manager in our game
 Manager manager;
 //creates and adds a player Entity to our manager
@@ -55,13 +57,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<TransformComponent>(100,100);
 	//gives our player a sprite component and sets it to rogueone
 	player.addComponent<SpriteComponent>("Assets/ninjagirl_66x88.png",0,0,66,88,.5,.5);
-	
+	//let us control our player among other things
+	player.addComponent<KeyBoardController>();
 	
 }
 
 void Game::handleEvents() //function for handling game events
 {
-	SDL_Event event;//SDL_Event event variable
+	
 	SDL_PollEvent(&event);//polls our event to see if there are events to be handled
 	switch (event.type) //depending on the event
 	{
@@ -94,9 +97,6 @@ void Game::update()//function for updating the game
 	{
 		cnt = 0;
 	}*/
-			
-		
-	
 	//moving through our games entities each frame and getting rid of those that aren't there/active anymore
 	manager.refresh();
 	//runs the managers update function to update all the components

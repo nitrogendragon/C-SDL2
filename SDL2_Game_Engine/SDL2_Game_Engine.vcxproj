@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="ECS\Components.h" />
     <ClInclude Include="ECS\ECS.h" />
+    <ClInclude Include="ECS\KeyBoardController.h" />
     <ClInclude Include="ECS\TransformComponent.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />

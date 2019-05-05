@@ -1,5 +1,6 @@
 #pragma once
-
+#include <iostream>
+using namespace std;
 class Vector2D
 {
 public:
@@ -37,5 +38,5 @@ public:
 	//directly operates on the referenced Vector2D to divideit by the value of vec
 	Vector2D& operator/=(const Vector2D& vec);
 
-
+	friend ostream& operator << (ostream& stream, const Vector2D& vec);
 };
