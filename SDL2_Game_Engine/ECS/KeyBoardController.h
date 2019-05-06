@@ -2,9 +2,10 @@
 #include "../Game.h"
 #include "ECS.h"
 #include "Components.h"
-
+#include "TransformComponent.h"
 class KeyBoardController : public Component
 {
+
 public:
 	//pointer to our transform component
 	TransformComponent *transform;
@@ -28,6 +29,7 @@ public:
 				transform->velocity.y = -10;
 				break;
 			case SDLK_a:
+				
 				transform->velocity.x = -10;
 				break;
 			case SDLK_d:

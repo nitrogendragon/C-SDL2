@@ -147,6 +147,7 @@
     <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ECS\TransformComponent.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
