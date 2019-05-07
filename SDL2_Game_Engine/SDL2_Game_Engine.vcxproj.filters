@@ -48,6 +48,12 @@
     <ClInclude Include="ECS\KeyBoardController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ECS\ColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\Collision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -68,7 +74,7 @@
     <ClCompile Include="Vector2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ECS\TransformComponent.cpp">
+    <ClCompile Include="ECS\Collision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

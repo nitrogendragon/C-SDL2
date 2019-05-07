@@ -4,7 +4,7 @@
 #include "Map.h"
 #include "ECS/Components.h"
 #include "Vector2D.h"
-
+#include "ECS/Collision.h"
 
 Map* map;
 SDL_Renderer* Game::renderer = nullptr;
@@ -13,7 +13,8 @@ SDL_Event Game::event;//SDL_Event event variable
 Manager manager;
 //creates and adds a player Entity to our manager
 auto& player(manager.addEntity());
-
+//creates a wall
+auto&wall(manager.addEntity());
 Game::Game()
 {
 
@@ -53,13 +54,17 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 	
 	map = new Map(0,0,32,32,1.0,1.0);//makes a new map
-	//gives our player a position component
-	player.addComponent<TransformComponent>(100,100);
-	//gives our player a sprite component and sets it to rogueone
-	player.addComponent<SpriteComponent>("Assets/ninjagirl_66x88.png",0,0,66,88,.5,.5);
+	//gives our player a position, height, width and height and width scaling component
+	player.addComponent<TransformComponent>(100,100,66,88,.7f,.7f);
+	//gives our player a sprite component and sets it to ninjagirl_66x88.png
+	player.addComponent<SpriteComponent>("Assets/ninjagirl_66x88.png");
 	//let us control our player among other things
 	player.addComponent<KeyBoardController>();
-	
+
+	//add transform component to our wall
+	wall.addComponent<TransformComponent>(300.0f, -400.0f, 700, 10, 1, 1);
+	//add sprite component so we can see our wall
+	wall.addComponent<SpriteComponent>("Assets/simpleground_32x32.png");
 }
 
 void Game::handleEvents() //function for handling game events
