@@ -13,10 +13,6 @@ private:
 	SDL_Rect srcRect, destRect;
 	
 public:
-	//sprite values to use for initializing and updating if desired the height, width, starting rendering point
-	int sRectH = 0, sRectW = 0, sRectX = 0, sRectY = 0;
-	//scaling values
-	float destHScale = 1.0, destWScale = 1.0;
 	//constructor
 	SpriteComponent() = default;
 	//for if we want to use TransformComponent to set up scaling and such
@@ -57,9 +53,9 @@ public:
 	void update() override
 	{
 		//sets our sprites x position to the x position of the entity
-		destRect.x = (int)transform->position.x;
+		destRect.x = static_cast<int>(transform->position.x);
 		//sets our sprites y position to the y position of the entity
-		destRect.y = (int)transform->position.y;
+		destRect.y = static_cast<int>(transform->position.y);
 		//set up our scaled sprite img 
 		destRect.w = transform->width * transform->wScale;
 		//set up our scaled sprite img

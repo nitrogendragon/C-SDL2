@@ -4,8 +4,10 @@
 #include "Components.h"
 using namespace std;
 //colliderComponent is derived from our component class
+//when calling the ColliderComponent Constructor it takes in (string t) for the tag name
 class ColliderComponent : public Component
 {
+public:
 	//add area to represent collision area
 	SDL_Rect collider;
 	//add tags for collision detection and find out if its for example: play,er enemy, wall, etc
@@ -13,6 +15,12 @@ class ColliderComponent : public Component
 
 	//collider needs access to transform component  so pointer to transform
 	TransformComponent* transform;
+	//constructor to set up tag for now
+	ColliderComponent(string t)
+	{
+		tag = t;
+	}
+
 	//override our initializer function
 	void init() override
 	{
@@ -28,13 +36,13 @@ class ColliderComponent : public Component
 	void update() override
 	{
 		//setting up our collider x position equal to our transforms position
-		collider.x = transform->position.x;
+		collider.x = static_cast<int>(transform->position.x);
 		//setting up our collider x position equal to our transforms position
-		collider.y = transform->position.y;
-		//set up the y value of the box collider based on our transforms width
+		collider.y = static_cast<int>(transform->position.y);
+		//set up the width value of the box collider based on our transforms width
 		collider.w = transform->width * transform->wScale;
-		//set up the x value of the box collider based on our transforms height
-		collider.x = transform->height * transform->hScale;
+		//set up the height value of the box collider based on our transforms height
+		collider.h = transform->height * transform->hScale;
 
 	}
 };

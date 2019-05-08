@@ -86,7 +86,7 @@ public:
 	template <typename T> bool hasComponent() const
 	{
 		/*we will generate a bitset and see if it matches the bitset of the entity with the passed componentID*/
-		return componentBitSet[getComponentTypeID<T>];
+		return componentBitSet[getComponentTypeID<T>()];
 	}
 
 	template<typename T, typename... TArgs>

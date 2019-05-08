@@ -37,6 +37,11 @@ public:
 	Vector2D& operator*=(const Vector2D& vec);
 	//directly operates on the referenced Vector2D to divideit by the value of vec
 	Vector2D& operator/=(const Vector2D& vec);
-
+	
+	// multiplying our vectors by a scaler number
+	Vector2D& operator*(const int& i);
+	//zero out our vectors
+	Vector2D& Zero();
+	
 	friend ostream& operator << (ostream& stream, const Vector2D& vec);
 };

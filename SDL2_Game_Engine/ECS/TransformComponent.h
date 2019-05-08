@@ -18,7 +18,7 @@ public:
 	int height = 2;
 	int	width = 2;
 	//scaling the hit/collider box
-	float wScale = 1, hScale =1;
+	int wScale = 1, hScale =1;
 	
 	
 	//interacts with velocity to adjust how fast the player moves
@@ -26,15 +26,16 @@ public:
 	int yspeed = 5;
 	
 	
+	
 	//sets position of the entity
-	TransformComponent(float x = 0.0f, float y = 0.0f)
+	TransformComponent()
 	{
-		position.x = x;
-		position.y = y;
+		//zero's out our position
+		position.Zero();
 	}
 
 	// sets position of the entity as well as height, width and scaling use if not setting via Sprite
-	TransformComponent(float x , float y , int h, int w, float wscale, float hscale)
+	TransformComponent(float x , float y , int h, int w, int wscale, int hscale)
 	{
 		position.x = x;
 		position.y = y;
@@ -68,9 +69,7 @@ public:
 	void init() override
 	{
 		//making sure we start at 0
-		velocity.x = 0;
-		//making sure we start at 0
-		velocity.y = 0;
+		velocity.Zero();
 	}
 	void update() override
 	{	//updates positions with vector normalizing probably

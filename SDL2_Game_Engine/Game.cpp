@@ -4,7 +4,7 @@
 #include "Map.h"
 #include "ECS/Components.h"
 #include "Vector2D.h"
-#include "ECS/Collision.h"
+#include "Collision.h"
 
 Map* map;
 SDL_Renderer* Game::renderer = nullptr;
@@ -55,16 +55,18 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	
 	map = new Map(0,0,32,32,1.0,1.0);//makes a new map
 	//gives our player a position, height, width and height and width scaling component
-	player.addComponent<TransformComponent>(100,100,66,88,.7f,.7f);
+	player.addComponent<TransformComponent>(100,100,66,88,1,1);
 	//gives our player a sprite component and sets it to ninjagirl_66x88.png
 	player.addComponent<SpriteComponent>("Assets/ninjagirl_66x88.png");
 	//let us control our player among other things
 	player.addComponent<KeyBoardController>();
-
+	//add collision detection to our player and give it the player tag
+	player.addComponent<ColliderComponent>("player");
 	//add transform component to our wall
-	wall.addComponent<TransformComponent>(300.0f, -400.0f, 700, 10, 1, 1);
+	wall.addComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1, 1);
 	//add sprite component so we can see our wall
 	wall.addComponent<SpriteComponent>("Assets/simpleground_32x32.png");
+	wall.addComponent<ColliderComponent>("wall");
 }
 
 void Game::handleEvents() //function for handling game events
@@ -106,7 +108,18 @@ void Game::update()//function for updating the game
 	manager.refresh();
 	//runs the managers update function to update all the components
 	manager.update();
+	//checking for our player and wall collision
 	
+	if (Collision::AABB(player.getComponent<ColliderComponent>().collider, wall.getComponent<ColliderComponent>().collider))
+	{
+		player.getComponent<TransformComponent>().hScale = 2;
+		int i = 0;
+		while (i < 20){
+			i++;
+			player.getComponent<TransformComponent>().velocity * -1;
+		}
+	}
+
 }
 void Game::render()//function for rendering the game
 {
