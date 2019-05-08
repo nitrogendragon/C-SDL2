@@ -3,6 +3,9 @@
 #include "SDL_image.h"
 #include "Map.h"
 #include <iostream>
+#include <vector>
+//declaration of ColliderComponent
+class ColliderComponent;
 using namespace std;
 class Game
 {
@@ -16,10 +19,14 @@ public:
 	void render();//renders Game elements
 	void clean();//clear game of memory
 	bool running() { return isRunning; }
-
-	static SDL_Renderer*renderer;
+	//pointer of type SDL_Renderer
+	static SDL_Renderer* renderer;
 	//can access event from anywhere now
 	static SDL_Event event;
+	//holds our colliders
+	static std::vector<ColliderComponent*> colliders;
+
+
 private:
 	int cnt = 0;//cnt for various purposes but mostly not needed
 	bool isRunning = false;//is the game running?

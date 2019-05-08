@@ -31,6 +31,9 @@ public:
 		}
 		//set transform equal to the entities adress of its TransformComponent, so basically wherever the transformcomponent is stored, that is where our transform will be working in
 		transform = &entity->getComponent<TransformComponent>();
+
+		//add this collider component to our games colliders list
+		Game::colliders.push_back(this);
 	}
 	//taking care of position of hit/collider box updating
 	void update() override
