@@ -18,9 +18,6 @@ auto& player(manager.addEntity());
 //creates a wall
 auto& wall(manager.addEntity());
 
-auto&tile0(manager.addEntity());
-auto&tile1(manager.addEntity());
-auto&tile2(manager.addEntity());
 
 Game::Game()
 {
@@ -62,13 +59,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	
 	map = new Map(0,0,32,32,1.0,1.0);//makes a new map
 
-	//just adding various tiles here
-	tile0.addComponent<TileComponent>(200, 200, 32, 32, 0);
-	tile1.addComponent<TileComponent>(250, 250, 32, 32, 1);
-	tile2.addComponent<TileComponent>(150, 150, 32, 32, 2);
-
-	tile1.addComponent<ColliderComponent>("dirt");
-	tile2.addComponent<ColliderComponent>("grass");
+	
 
 
 	//gives our player a position, height, width and height and width scaling component
@@ -135,7 +126,6 @@ void Game::update()//function for updating the game
 void Game::render()//function for rendering the game
 {
 	SDL_RenderClear(renderer);//clears the rendering target which in this case is our Game class renderer
-	//map->DrawMap();//draws our map for us
 	manager.draw();//runs the manager draw fucntion to draw  entities
 	//this is where we add stuff to render
 	//order determines layer.. first in the back last in the front
@@ -148,5 +138,12 @@ void Game::clean()//clear game of memory
 	SDL_DestroyRenderer(renderer);//destroys our game renderer
 	SDL_Quit();//cleans up all the initialized subsystems ..call whenever we are exiting/on exit conditions
 	cout << "Game Cleaned" << endl;//let us know the game is cleaned up
+}
+//implementation of our addtile Game Class function
+//takes in (int x, int y, int id, int h, int w) for position x and y, tile id, and height and width which have default values of 32
+void Game::AddTile(int x, int y, int id, int h, int w)
+{
+	auto& tile(manager.addEntity());
+	tile.addComponent<TileComponent>(x, y, id, h, w);
 }
 

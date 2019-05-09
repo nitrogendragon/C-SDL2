@@ -23,7 +23,7 @@ public:
 	const char* path;
 	
 	//set up tile position and dimensions
-	TileComponent(int x, int y, int w, int h, int id)
+	TileComponent(int x, int y, int id, int w, int h)
 	{
 		
 		tileRect.x = x;
