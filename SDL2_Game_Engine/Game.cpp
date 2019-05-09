@@ -65,7 +65,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	
 	//ecs implementation
 	//loads our map TMap which is a 16x16 tilemap of 32x32 pixel tiles
-	Map::LoadMap("Assets/P16x16.txt", 16, 16);
+	Map::LoadMap("Assets/TileMap1_16x16.txt", 16, 16);
 
 	//gives our player a position, height, width and height and width scaling component
 	player.addComponent<TransformComponent>(100,100,66,88,1,1);
@@ -146,9 +146,9 @@ void Game::clean()//clear game of memory
 }
 //implementation of our addtile Game Class function
 //takes in (int x, int y, int id, int h, int w) for position x and y, tile id, and height and width which have default values of 32
-void Game::AddTile(int x, int y, int id, int h, int w)
+void Game::AddTile(int id, int x, int y)
 {
 	auto& tile(manager.addEntity());
-	tile.addComponent<TileComponent>(x, y, id, h, w);
+	tile.addComponent<TileComponent>(x, y, id, 32, 32);
 }
 

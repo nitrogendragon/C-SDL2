@@ -23,7 +23,7 @@ public:
 	const char* path;
 	
 	//set up tile position and dimensions
-	TileComponent(int x, int y, int id, int h=32, int w=32)
+	TileComponent(int x, int y, int id, int h, int w)
 	{
 		
 		tileRect.x = x;
@@ -40,10 +40,13 @@ public:
 			path = "Assets/simplewater_32x32.png";
 			break;
 		case 1:
-			path = "Assets/simpleground_32x32.png";
+			path = "Assets/simplegrass_32x32.png";
 			break;
 		case 2:
-			path = "Assets/simplegrass_32x32.png";
+			path = "Assets/simpleground_32x32.png";
+			break;
+		case 3:
+			path = "Assets/simplewater_32x32.png";
 			break;
 		default:
 			break;
