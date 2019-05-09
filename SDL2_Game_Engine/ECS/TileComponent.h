@@ -4,7 +4,7 @@
 #include "TransformComponent.h"
 #include "SDL.h"
 //creates a TileComponent
-//constructor form is as follows (TileComponent(int x, int y, int w, int h, int id
+//constructor form is as follows (TileComponent(int x, int y, int id, int h, int w)
 //x and y starting rendering points, w and h size parameters, id for identifying specific tiles
 class TileComponent : public Component
 {
@@ -23,7 +23,7 @@ public:
 	const char* path;
 	
 	//set up tile position and dimensions
-	TileComponent(int x, int y, int id, int w, int h)
+	TileComponent(int x, int y, int id, int h=32, int w=32)
 	{
 		
 		tileRect.x = x;

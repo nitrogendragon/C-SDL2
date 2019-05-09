@@ -33,9 +33,14 @@ bool Collision::AABB(const ColliderComponent& colA, const ColliderComponent& col
 			//we hit something
 			return true;
 		}
+		else {
+			//we hit ourselves so no collision
+			return false;
+		}
 	}
 	else
 	{
+		//do nothing
 		return false;
 	}
 }

@@ -56,11 +56,16 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		isRunning = true;//we are running
 	}
-	
-	map = new Map(0,0,32,32,1.0,1.0);//makes a new map
+	//make a new Map map
+	map = new Map();
+
+
+
 
 	
-
+	//ecs implementation
+	//loads our map TMap which is a 16x16 tilemap of 32x32 pixel tiles
+	Map::LoadMap("Assets/P16x16.txt", 16, 16);
 
 	//gives our player a position, height, width and height and width scaling component
 	player.addComponent<TransformComponent>(100,100,66,88,1,1);
