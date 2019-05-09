@@ -22,7 +22,8 @@ public:
 	//file path... NOTE must be constant or visual studios will have a hissy fit
 	const char* path;
 	
-	//set up tile position and dimensions
+	//set up tile position and dimensions...
+	//Note: remember to update switch statement cases as more images are made
 	TileComponent(int x, int y, int id, int h, int w)
 	{
 		

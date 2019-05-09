@@ -18,6 +18,14 @@ auto& player(manager.addEntity());
 //creates a wall
 auto& wall(manager.addEntity());
 
+//labels for our groups
+enum groupLabels : std::size_t
+{
+	groupMap,
+	groupPlayers,
+	groupEnemies,
+	groupColliders
+};
 
 Game::Game()
 {
@@ -59,8 +67,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	//make a new Map map
 	map = new Map();
 
-
-
+	
 
 	
 	//ecs implementation
@@ -75,11 +82,16 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<KeyBoardController>();
 	//add collision detection to our player and give it the player tag
 	player.addComponent<ColliderComponent>("player");
+	//adds player to groupPlayers groupLabel
+	player.addGroup(groupPlayers);
+
+
 	//add transform component to our wall
 	wall.addComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1, 1);
 	//add sprite component so we can see our wall
 	wall.addComponent<SpriteComponent>("Assets/simpleground_32x32.png");
 	wall.addComponent<ColliderComponent>("wall");
+	wall.addGroup(groupMap);
 }
 
 void Game::handleEvents() //function for handling game events
@@ -128,10 +140,33 @@ void Game::update()//function for updating the game
 	}
 
 }
+//map objects list aka tiles list
+auto&tiles(manager.getGroup(groupMap));
+//players list
+auto& players(manager.getGroup(groupPlayers));
+//enemies list
+auto& enemies(manager.getGroup(groupEnemies));
+
+
 void Game::render()//function for rendering the game
 {
 	SDL_RenderClear(renderer);//clears the rendering target which in this case is our Game class renderer
-	manager.draw();//runs the manager draw fucntion to draw  entities
+	
+	//draws our tiles for our map
+	for (auto& t : tiles)
+	{
+		t->draw();
+	}
+	//draws our players
+	for (auto& p : players)
+	{
+		p->draw();
+	}
+	//draws our enemies
+	for (auto& e : enemies)
+	{
+		e->draw();
+	}
 	//this is where we add stuff to render
 	//order determines layer.. first in the back last in the front
 
@@ -150,5 +185,7 @@ void Game::AddTile(int id, int x, int y)
 {
 	auto& tile(manager.addEntity());
 	tile.addComponent<TileComponent>(x, y, id, 32, 32);
+	tile.addGroup(groupMap);
+	
 }
 

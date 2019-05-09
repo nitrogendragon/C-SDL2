@@ -5,29 +5,39 @@
 #include <algorithm>
 #include <bitset>
 #include <array>
+
 using namespace std;
 class Component;//declare Component class
 class Entity;// declare Entity class
+class Manager;//forward declaration
 //sets up ComponentID as an unsigned int
 using ComponentID = size_t;
+//reference to managaer by forward declaring it
+using Group = size_t;
 //inline acts a bit like header file, puts the code exactly where we use the function. here it will grab the components Id
 inline ComponentID getComponentTypeID() 
 {
-	static ComponentID lastID = 0;//ID starts at zero
+	static ComponentID lastID = 0u;//ID starts at zero
 	return lastID++;//increments everytime we get a new ID
 }
 //inline template w/o exception using typename T and running getComponentID(), returns typeID
 template<typename T> inline ComponentID getComponentTypeID() noexcept
 {
-	static ComponentID typeID = getComponentTypeID();//generates new lastID and puts it in our typeID
+	static_assert (std::is_base_of<Component, T>::value, "");
+	static ComponentID typeID = getComponentTypeID();//generates new last ID and puts it in our typeID
 	return typeID;//returns the typeID for the component
 }
 
 constexpr size_t maxComponents = 32;//max number of components an entity is able to hold
+//we can have 32 groups or layers used for rendering or collision
+constexpr size_t maxGroups = 32;
 /*if we need to find out if an entity has got a selection of components, we will be able to compare whether it has it or not.
  via generating a bitset, passing it in, and if it matches the signature of the entity, we know we have all the components we need
 */
+//create bitset for maxComponents
 using ComponentBitSet = bitset<maxComponents>;
+//create bitset for maxGroups
+using GroupBitSet = bitset<maxGroups>;
 //an array of component pointers the length of our max components
 using ComponentArray = array<Component*, maxComponents>;
 
@@ -49,6 +59,8 @@ public:
 class Entity
 {
 private:
+	//manager reference manager
+	Manager& manager;
 	//is the entity active "true", if not we can remove it from the game
 	bool active = true;
 	/*vector to keep a list of all the components the entity is holding. 
@@ -63,7 +75,13 @@ private:
 	/*giving the entity its own ComponentBitSet caleed component BitSet, allows us to check if the entity has a 
 	selection of components or not*/
 	ComponentBitSet componentBitSet;
+	//each entity is now aware that it has its own groupbitset and can find out what groups its in
+	GroupBitSet groupBitset;
+	//groupbitset
 public:
+	//Manager reference for member manager, 
+	//everytime we create an entity we'll pass in a manager so we have a reference to our membersManager
+	Entity(Manager& mManager) : manager(mManager){}
 	/* We will have the entity loop through all its components and have the entity call its' update and draw
 	methods for each of the components*/
 	void update()
@@ -81,6 +99,21 @@ public:
 	/*arms any given component, because our component has a reference to the owner, we can call the entities
 	destroy function from there*/
 	void destroy() { active = false; }
+
+	//are we in a group
+	bool hasGroup(Group mGroup)
+	{
+		//return true or false if a certain bit is a zero or one in that group
+		return groupBitset[mGroup];
+	}
+
+	//adding groups
+	void addGroup(Group mGroup);
+	//check if bit is false, if it is, it will remove that entity from the group
+	void delGroup(Group mGroup)
+	{
+		groupBitset[mGroup] = false;
+	}
 
 	/*template using bitset tells us if the entity has the component via true false*/
 	template <typename T> bool hasComponent() const
@@ -121,6 +154,8 @@ class Manager
 private:
 	/*making a vector array to hold the entities we will be managing*/
 	vector<unique_ptr<Entity>> entities;
+	//array of our grouped entities of size maxGroups
+	std::array<std::vector<Entity*>, maxGroups> groupedEntities;
 public:
 	//basically for entity e in vector array entities.. update it
 	void update()
@@ -132,25 +167,49 @@ public:
 	{
 		for (auto& e : entities) e->draw();
 	}
-	//every frame move through our entities and remove the ones that aren't there(no longer active)
+	//every frame move through our entities and remove the ones that aren't there(no longer active) from our groups
 	void refresh()
 	{
-		entities.erase(remove_if(begin(entities), end(entities),
-			[](const unique_ptr<Entity> &mEntity)
+		for (auto i(0u); i < maxGroups; i++)
+		{
+			auto& v(groupedEntities[i]);
+			v.erase
+			(
+				std::remove_if(std::begin(v), std::end(v), 
+					[i](Entity* mEntity)
+			{
+				return !mEntity->isActive() || !mEntity->hasGroup(i);
+			}),
+				std::end(v));
+		}
+
+		entities.erase(std::remove_if(std::begin(entities), std::end(entities),
+			[](const std::unique_ptr<Entity> &mEntity)
 		{
 			return !mEntity->isActive();
 		}),
 			end(entities));
 	}
+	//Adds our entity to the group
+	void AddToGroup(Entity* mEntity, Group mGroup)
+	{
+		groupedEntities[mGroup].emplace_back(mEntity);
+	}
+	//returns the list of entities in our groupedEntities group
+	std::vector<Entity*>& getGroup(Group mGroup)
+	{
+		return groupedEntities[mGroup];
+	}
+
 	//add entity to the world through manager class
 	Entity& addEntity()
 	{
 		//Entity type pointer to a new Entity object
-		Entity* e = new Entity();
+		Entity *e = new Entity(*this);
 		//create unique pointer of type entity and initialize it to the Entity pointer e
-		unique_ptr<Entity> uPtr{ e };
+		std::unique_ptr<Entity> uPtr{ e };
 		//appends the value of uPtr to the end of the container or in this case the vector array entities
-		entities.emplace_back(move(uPtr));
+		entities.emplace_back(std::move(uPtr));
 		//return e ptr to finish adding the entity
 		return *e;
 	}
