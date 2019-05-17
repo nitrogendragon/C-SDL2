@@ -11,11 +11,17 @@ private:
 	SDL_Texture *texture;
 	//rects for sizing and scaling sprite
 	SDL_Rect srcRect, destRect;
+	//are we animated?
+	bool animated = false;
+	//# of frames
+	int frames = 0;
+	//delat between frames in miliseconds
+	int speed = 100;
 	
 public:
 	//constructor
 	SpriteComponent() = default;
-	//for if we want to use TransformComponent to set up scaling and such
+	
 	
 	//create sprite component based path to texture img, starting img render points, number of horizontalxvertical pixels of source to render, and scaling
 	SpriteComponent(const char* path)
@@ -23,6 +29,16 @@ public:
 		//creates texture by loading our image using setTex function defined after our function here
 		setTex(path);
 	
+	}
+
+	//create sprite component based path to texture img, starting img render points, number of horizontalxvertical pixels of source to render, and scaling
+	SpriteComponent(const char* path, int nFrames, int mSpeed)
+	{
+		animated = true;
+		frames = nFrames;
+		speed = mSpeed;
+		setTex(path);
+
 	}
 
 	//deconstructor to destroy texture when gone
@@ -52,6 +68,10 @@ public:
 
 	void update() override
 	{
+		if (animated)
+		{
+			srcRect.x = srcRect.w * static_cast<int>((SDL_GetTicks() / speed) % frames);
+		}
 		//sets our sprites x position to the x position of the entity
 		destRect.x = static_cast<int>(transform->position.x);
 		//sets our sprites y position to the y position of the entity

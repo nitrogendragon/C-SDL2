@@ -22,8 +22,8 @@ public:
 	
 	
 	//interacts with velocity to adjust how fast the player moves
-	int xspeed = 10;
-	int yspeed = 5;
+	int xspeed = 5;
+	int yspeed = 3;
 	
 	
 	

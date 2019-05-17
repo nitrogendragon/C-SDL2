@@ -75,9 +75,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	Map::LoadMap("Assets/TileMap1_16x16.txt", 16, 16);
 
 	//gives our player a position, height, width and height and width scaling component
-	player.addComponent<TransformComponent>(100,100,66,88,1,1);
+	player.addComponent<TransformComponent>(100,100,64,64,3,3);
 	//gives our player a sprite component and sets it to ninjagirl_66x88.png
-	player.addComponent<SpriteComponent>("Assets/ninjagirl_66x88.png");
+	player.addComponent<SpriteComponent>("Assets/slimeidle_64_64_15frames.png",15,50);
 	//let us control our player among other things
 	player.addComponent<KeyBoardController>();
 	//add collision detection to our player and give it the player tag
