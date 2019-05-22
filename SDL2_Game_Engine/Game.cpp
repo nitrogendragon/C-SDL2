@@ -5,8 +5,9 @@
 #include "ECS/Components.h"
 #include "Vector2D.h"
 #include "Collision.h"
+
 using namespace std;
-Map* map;
+Map* map1;
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;//SDL_Event event variable
 //creates a Manager class instance manager in our game
@@ -15,6 +16,10 @@ Manager manager;
 vector<ColliderComponent*> Game::colliders;
 //creates and adds a player Entity to our manager
 auto& player(manager.addEntity());
+
+
+
+
 //creates a wall
 auto& wall(manager.addEntity());
 
@@ -40,6 +45,7 @@ Game::~Game()
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) 
 {
+	
 	int flags = 0;// determines whether we do fullscreen or not.. 0 would be equated to false and 1 is true
 	if(fullscreen)// if we pass a true bool or 1
 	{
@@ -65,7 +71,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = true;//we are running
 	}
 	//make a new Map map
-	map = new Map();
+	map1 = new Map();
 
 	
 
@@ -73,17 +79,19 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	//ecs implementation
 	//loads our map TMap which is a 16x16 tilemap of 32x32 pixel tiles
 	Map::LoadMap("Assets/TileMap1_16x16.txt", 16, 16);
+	
+		//gives our player a position, height, width and height and width scaling component
+		player.addComponent<TransformComponent>(100, 100, 64, 64, 3, 3);
+		//gives our player a sprite component and sets it to ninjagirl_66x88.png
+		player.addComponent<SpriteComponent>("Assets/slime_animated_64x64_15x15x5x5x5x5_frames.png", true);
+		//let us control our player among other things
+		player.addComponent<KeyBoardController>();
+		//add collision detection to our player and give it the player tag
+		player.addComponent<ColliderComponent>("player");
+		//adds player to groupPlayers groupLabel
+		player.addGroup(groupPlayers);
 
-	//gives our player a position, height, width and height and width scaling component
-	player.addComponent<TransformComponent>(100,100,64,64,3,3);
-	//gives our player a sprite component and sets it to ninjagirl_66x88.png
-	player.addComponent<SpriteComponent>("Assets/slimeidle_64_64_15frames.png",15,50);
-	//let us control our player among other things
-	player.addComponent<KeyBoardController>();
-	//add collision detection to our player and give it the player tag
-	player.addComponent<ColliderComponent>("player");
-	//adds player to groupPlayers groupLabel
-	player.addGroup(groupPlayers);
+	
 
 
 	//add transform component to our wall
@@ -108,27 +116,9 @@ void Game::handleEvents() //function for handling game events
 			break;//break out of the switch statement
 	}
 }
-//temporary counter for showing dmg dealt example via texswapping
-//int cnt = 0;
+
 void Game::update()//function for updating the game
 {
-	//example for animating dmg so to speak via color changing
-	/*if (player.getComponent<PositionComponent>().x() > 100 && cnt < 1)
-	{
-		player.getComponent<SpriteComponent>().setTex("Assets/ninjagirl_damaged_66x88.png");
-	}
-	else 
-	{ 
-		player.getComponent<SpriteComponent>().setTex("Assets/ninjagirl_66x88.png"); 
-	}
-	if (cnt < 2) 
-	{
-		cnt++;
-	}
-	else
-	{
-		cnt = 0;
-	}*/
 	//moving through our games entities each frame and getting rid of those that aren't there/active anymore
 	manager.refresh();
 	//runs the managers update function to update all the components

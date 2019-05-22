@@ -2,6 +2,8 @@
 #include "Components.h"
 #include "SDL.h"
 #include "../TextureManager.h"
+#include "Animation.h"
+#include<map>;
 class SpriteComponent: public Component
 {
 private:
@@ -19,9 +21,12 @@ private:
 	int speed = 100;
 	
 public:
-	//constructor
+
+	int animIndex = 0;
+
 	SpriteComponent() = default;
-	
+	//hold animations, taking in animation name, and an Animation object called animations
+	std::map<const char*, Animation> animations;
 	
 	//create sprite component based path to texture img, starting img render points, number of horizontalxvertical pixels of source to render, and scaling
 	SpriteComponent(const char* path)
@@ -31,13 +36,27 @@ public:
 	
 	}
 
-	//create sprite component based path to texture img, starting img render points, number of horizontalxvertical pixels of source to render, and scaling
-	SpriteComponent(const char* path, int nFrames, int mSpeed)
+	//create sprite component uaing path to texture img, and whether its animated or not 
+	SpriteComponent(const char* path, bool isAnimated)
 	{
-		animated = true;
-		frames = nFrames;
-		speed = mSpeed;
+		animated = isAnimated;
+
+		Animation idle = Animation(0, 15, 50);
+		Animation blast = Animation(1, 15, 100);
+		Animation rollRight = Animation(2, 5, 50);
+		Animation rollLeft = Animation(3, 5, 50);
+		Animation rollUp = Animation(5, 5, 50);
+		Animation rollDown = Animation(4, 5, 50);
+		animations.emplace("Idle", idle);
+		animations.emplace("Blast", blast);
+		animations.emplace("RollRight", rollRight);
+		animations.emplace("RollLeft", rollLeft);
+		animations.emplace("RollUp", rollUp);
+		animations.emplace("RollDown", rollDown);
+
+		
 		setTex(path);
+		Play("Idle");
 
 	}
 
@@ -72,6 +91,9 @@ public:
 		{
 			srcRect.x = srcRect.w * static_cast<int>((SDL_GetTicks() / speed) % frames);
 		}
+
+		srcRect.y = animIndex * transform->height;
+
 		//sets our sprites x position to the x position of the entity
 		destRect.x = static_cast<int>(transform->position.x);
 		//sets our sprites y position to the y position of the entity
@@ -85,6 +107,14 @@ public:
 	void draw() override
 	{
 		TextureManager::Draw(texture, srcRect, destRect);
+	}
+	//changes current frames and index needed for changing animation
+	void Play(const char* animName)
+	{
+		cout << "bob" << endl;
+		frames = animations[animName].frames;
+		animIndex = animations[animName].index;
+		speed = animations[animName].speed;
 	}
 };
 
