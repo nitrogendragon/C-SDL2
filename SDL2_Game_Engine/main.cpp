@@ -1,10 +1,10 @@
 #include "Game.h"
 
 Game *game = nullptr;
-
+const int FPS = 120;
 int main(int argc, char *argv[])
 {
-	const int FPS = 120;
+	
 	const int frameDelay = 1000 / FPS;
 
 	Uint32 frameStart;
@@ -20,7 +20,6 @@ int main(int argc, char *argv[])
 		game->render();
 
 		frameTime = SDL_GetTicks() - frameStart;
-
 		if(frameDelay > frameTime)
 		
 		{

@@ -4,6 +4,7 @@
 #include "../TextureManager.h"
 #include "Animation.h"
 #include<map>;
+
 class SpriteComponent: public Component
 {
 private:
@@ -17,8 +18,13 @@ private:
 	bool animated = false;
 	//# of frames
 	int frames = 0;
-	//delat between frames in miliseconds
+	//delay between frames in miliseconds
 	int speed = 100;
+	//the current frame we are on
+	int curFrame = 0;
+
+	
+	
 	
 public:
 
@@ -84,7 +90,7 @@ public:
 		//set our height to our transforms width which we already defined when we added our TransformComponent
 		srcRect.h = transform->height;
 	}
-
+	
 	void update() override
 	{
 		if (animated)
@@ -111,7 +117,7 @@ public:
 	//changes current frames and index needed for changing animation
 	void Play(const char* animName)
 	{
-		cout << "bob" << endl;
+		cout << "down" << endl;
 		frames = animations[animName].frames;
 		animIndex = animations[animName].index;
 		speed = animations[animName].speed;
