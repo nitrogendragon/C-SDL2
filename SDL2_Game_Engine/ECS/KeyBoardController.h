@@ -125,10 +125,10 @@ public:
 			{
 				
 				spacedown = false;
-				
+				sprite->Play("Idle");
 			}
 			//we dont want to go into idle unless we aren't moving
-			else if (!wdown && !sdown && !ddown && !adown && !isIdle)
+			if (!wdown && !sdown && !ddown && !adown && !isIdle)
 			{
 				sprite->Play("Idle");
 				isIdle = true;
@@ -172,6 +172,8 @@ public:
 			}
 			if (Game::event.key.keysym.sym == SDLK_SPACE && spacedown == false)
 			{
+				transform->velocity.x = 0;
+				transform->velocity.y = 0;
 				sprite->Play("Blast");
 				spacedown = true;
 			}

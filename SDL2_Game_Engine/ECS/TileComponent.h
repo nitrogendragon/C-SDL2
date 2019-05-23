@@ -9,60 +9,35 @@
 class TileComponent : public Component
 {
 public:
-	//pointer of type TransformComponent 
-	TransformComponent *transform;
-	//pointer of type SpriteComponent
-	SpriteComponent * sprite;
-	//default constructor
+
+	SDL_Texture* texture;
+	SDL_Rect srcRect, destRect;
+
+
 	TileComponent() = default;
-	//our SDL_Rect for our tilemap
-	SDL_Rect tileRect;
-	//integer for setting the id of the tile/tilemap
-	int tileID;
-	//file path... NOTE must be constant or visual studios will have a hissy fit
-	const char* path;
 	
+	~TileComponent()
+	{
+		SDL_DestroyTexture(texture);
+	}
 	//set up tile position and dimensions...
 	//Note: remember to update switch statement cases as more images are made
-	TileComponent(int x, int y, int id, int h, int w)
+	TileComponent(int srcX, int srcY, int xpos, int ypos, const char* path)
 	{
-		
-		tileRect.x = x;
-		tileRect.y = y;
-		tileRect.w = w;
-		tileRect.h = h;
-		//configure this tiles id
-		tileID = id;
+		texture = TextureManager::LoadTexture(path);
 
-		//switch statement case based on tileID to choose what tile png to load
-		switch (tileID)
-		{
-		case 0:
-			path = "Assets/simplewater_32x32.png";
-			break;
-		case 1:
-			path = "Assets/simplegrass_32x32.png";
-			break;
-		case 2:
-			path = "Assets/simpleground_32x32.png";
-			break;
-		case 3:
-			path = "Assets/simplewater_32x32.png";
-			break;
-		default:
-			break;
-		}
+		srcRect.x = srcX;
+		srcRect.y = srcY;
+		srcRect.w = srcRect.h = 32;
+
+		destRect.x = xpos;
+		destRect.y = ypos;
+		destRect.w = destRect.h = 32;
 	}
 
-	void init() override
+	void draw() override
 	{
-		//adding our tileRect information
-		entity->addComponent<TransformComponent>(tileRect.x, tileRect.y, tileRect.w, tileRect.h, 1, 1);
-		//sets our transform to our entities address of its TransformComponent
-		transform = &entity->getComponent<TransformComponent>();
-		//adds spriteComponent to our entity
-		entity->addComponent<SpriteComponent>(path);
-		//sets our tileComponents sprite to our entities SpriteComponent sprite
-		sprite = &entity->getComponent <SpriteComponent>();
+		TextureManager::Draw(texture, srcRect, destRect, SDL_FLIP_NONE);
 	}
+
 };

@@ -19,8 +19,9 @@ public:
 	void render();//renders Game elements
 	void clean();//clear game of memory
 	bool running() { return isRunning; }
-	//method to add tiles taking in the x and y positions, an id for the tileid, and height and width of the respective tiles default set to typical 32x32
-	static void AddTile( int id, int x , int y);
+
+	//another method to add tiles taking in srcX and Y dimensions and x and y
+	static void AddTile(int srcX, int srcY, int xpos, int ypos);
 	//pointer of type SDL_Renderer
 	static SDL_Renderer* renderer;
 	//can access event from anywhere now

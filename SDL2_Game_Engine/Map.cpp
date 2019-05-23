@@ -19,8 +19,10 @@ Map::~Map()
 void Map::LoadMap(std::string path, int sizeX, int sizeY)
 {
 	//taking in character by character when reading the file for getting our tiles
-	char tile;
-	std::string str;
+	char c;
+	//holder for srcX or Y value depending on situation
+	char holdchar;
+
 	
 	//object to store the file we are loading
 	std::fstream mapFile;
@@ -28,63 +30,46 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY)
 	//open our mapfile
 	mapFile.open(path);
 	//parsigng file
-
-/*	for (int y = 0; y < sizeY+6; y++) 
-	{
-		
-		for (int x = 0; x < sizeX; x++)
-		{
-			if (y < 6) {
-				getline(mapFile, str);
-
-			}
-			else {
-
-
-
-				mapFile.get(tile);
-				cout << tile << endl;
-				//create tile in position (x * width, y * height), convert character tile to int for setting up tileid,
-				//and set the height and width as desired...Note that h and w have default values of 32
-				Game::AddTile(atoi(&tile), x * 32, (y-6) * 32);
-				mapFile.ignore(); 
-			}
-		}
-		//mapFile.ignore();
-	}
-		
-*/		
 	
-				
+	int srcX, srcY = 0;
+
 	for (int y = 0; y < sizeY; y++)
 	{
-		getline(mapFile, str);
-		cout << str << endl;
+		std::cout << y << " ";
 		for (int x = 0; x < sizeX; x++)
 		{
-			
-			
+			mapFile.get(c);//get our first char value
+			std::cout << c;
+			holdchar = c;//hold it in case comma is next
+			mapFile.get(c);//get second char value
+			if (c != ',') //not a comma?
+			{
+				std::cout << c<<", ";
+				if (c == '0') 
+				{
+					srcY = (atoi(&holdchar)) * 32-32;//y gets the held value
+					srcX = (atoi(&c)+9) * 32;//x gets the new value and we minus 1 to adjust for 0 start index
+					mapFile.ignore();//ignore the next value because we know its a comma
+				}
+				else
+				{
+					srcY = (atoi(&holdchar)) * 32;//y gets the held value
+					srcX = (atoi(&c)-1) * 32;//x gets the new value and we minus 1 to adjust for 0 start index
+					mapFile.ignore();//ignore the next value because we know its a comma
+				}
+			}
+			else
+			{
+				srcY = 0;
+				srcX = (atoi(&holdchar)-1) * 32;
+			}
 
+			Game::AddTile(srcX, srcY, x * 32, y * 32);
 
-
-			//tile = str[(x * 2)];
-			cout << str[x*2]<< endl;
-			//create tile in position (x * width, y * height), convert character tile to int for setting up tileid,
-			//and set the height and width as desired...Note that h and w have default values of 32
-			Game::AddTile(atoi(&str[x*2]), x * 32, y * 32);
-				
-			
 		}
-		//mapFile.ignore();
+		std::cout << endl;
 	}
-					
-					
-		
-			
-
-		
-
-	cout << "still working" << endl;
+	std::cout << "still working" << endl;
 	//close our map file
 	mapFile.close();
 }

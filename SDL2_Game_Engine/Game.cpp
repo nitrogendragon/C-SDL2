@@ -17,12 +17,10 @@ vector<ColliderComponent*> Game::colliders;
 //creates and adds a player Entity to our manager
 auto& player(manager.addEntity());
 
-
-
-
 //creates a wall
 auto& wall(manager.addEntity());
 
+const char* mapfile = "Assets/WorldPieces_32x32.png";
 //labels for our groups
 enum groupLabels : std::size_t
 {
@@ -43,11 +41,11 @@ Game::~Game()
 
 }
 
-void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) 
+void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
 {
-	
+
 	int flags = 0;// determines whether we do fullscreen or not.. 0 would be equated to false and 1 is true
-	if(fullscreen)// if we pass a true bool or 1
+	if (fullscreen)// if we pass a true bool or 1
 	{
 		flags = SDL_WINDOW_FULLSCREEN;// flags is 1 or true so we are fullscreen
 	}
@@ -73,33 +71,27 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	//make a new Map map
 	map1 = new Map();
 
-	
 
-	
+
+
 	//ecs implementation
-	//loads our map TMap which is a 16x16 tilemap of 32x32 pixel tiles
-	Map::LoadMap("Assets/TileMap1_16x16.txt", 16, 16);
-	
-		//gives our player a position, height, width and height and width scaling component
-		player.addComponent<TransformComponent>(100, 100, 64, 64, 3, 3);
-		//gives our player a sprite component and sets it to ninjagirl_66x88.png
-		player.addComponent<SpriteComponent>("Assets/slime_animated_64x64_15x15x5x5x5x5_frames.png", true);
-		//let us control our player among other things
-		player.addComponent<KeyBoardController>();
-		//add collision detection to our player and give it the player tag
-		player.addComponent<ColliderComponent>("player");
-		//adds player to groupPlayers groupLabel
-		player.addGroup(groupPlayers);
+	//loads our map TMap which is a tilemap of 32x32 pixel tiles
+	Map::LoadMap("Assets/TMap_60x30.txt", 60, 30);
 
-	
+	//gives our player a position, height, width and height and width scaling component
+	player.addComponent<TransformComponent>(100, 100, 64, 64, 3, 3);
+	//gives our player a sprite component and sets it to ninjagirl_66x88.png
+	player.addComponent<SpriteComponent>("Assets/slime_animated_64x64_15x15x5x5x5x5_frames.png", true);
+	//let us control our player among other things
+	player.addComponent<KeyBoardController>();
+	//add collision detection to our player and give it the player tag
+	player.addComponent<ColliderComponent>("player");
+	//adds player to groupPlayers groupLabel
+	player.addGroup(groupPlayers);
 
 
-	//add transform component to our wall
-	wall.addComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1, 1);
-	//add sprite component so we can see our wall
-	wall.addComponent<SpriteComponent>("Assets/simpleground_32x32.png");
-	wall.addComponent<ColliderComponent>("wall");
-	wall.addGroup(groupMap);
+
+
 }
 
 void Game::handleEvents() //function for handling game events
@@ -169,13 +161,15 @@ void Game::clean()//clear game of memory
 	SDL_Quit();//cleans up all the initialized subsystems ..call whenever we are exiting/on exit conditions
 	cout << "Game Cleaned" << endl;//let us know the game is cleaned up
 }
+
+
 //implementation of our addtile Game Class function
 //takes in (int x, int y, int id, int h, int w) for position x and y, tile id, and height and width which have default values of 32
-void Game::AddTile(int id, int x, int y)
+void Game::AddTile(int srcX, int srcY, int xpos, int ypos)
 {
 	auto& tile(manager.addEntity());
-	tile.addComponent<TileComponent>(x, y, id, 32, 32);
+	tile.addComponent<TileComponent>(srcX, srcY, xpos, ypos, mapfile);
 	tile.addGroup(groupMap);
-	
+
 }
 
