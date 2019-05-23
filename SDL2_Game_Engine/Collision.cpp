@@ -29,7 +29,7 @@ bool Collision::AABB(const ColliderComponent& colA, const ColliderComponent& col
 		//make sure we aren't hitting ourselves
 		if (colA.tag != colB.tag) {
 			//let us know who hit who
-			cout << colA.tag << " hit: " << colB.tag << endl;
+			//cout << colA.tag << " hit: " << colB.tag << endl;
 			//we hit something
 			return true;
 		}
