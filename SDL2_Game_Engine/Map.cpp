@@ -14,15 +14,16 @@ Map::~Map()
 {
 
 }
-//loads our map from the file we choose. takes in (string path, int sizeX, int sizeY, int h, int w) 
+//loads our map from the file we choose. takes in (string path, int sizeX, int sizeY, int xPix, int yPix) 
 //filename path, X and Y size of map, height and width dimensions of tiles
-void Map::LoadMap(std::string path, int sizeX, int sizeY)
+void Map::LoadMap(std::string path, int sizeX, int sizeY,int xPix, int yPix)
 {
 	//taking in character by character when reading the file for getting our tiles
 	char c;
 	//holder for srcX or Y value depending on situation
 	char holdchar;
-
+	int xPixDim = xPix;
+	int yPixDim = yPix;
 	
 	//object to store the file we are loading
 	std::fstream mapFile;
@@ -47,24 +48,24 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY)
 				std::cout << c<<", ";
 				if (c == '0') 
 				{
-					srcY = (atoi(&holdchar)) * 32-32;//y gets the held value
-					srcX = (atoi(&c)+9) * 32;//x gets the new value and we minus 1 to adjust for 0 start index
+					srcY = (atoi(&holdchar)) * yPixDim- yPixDim;//y gets the held value
+					srcX = (atoi(&c)+9) * xPixDim;//x gets the new value and we minus 1 to adjust for 0 start index
 					mapFile.ignore();//ignore the next value because we know its a comma
 				}
 				else
 				{
-					srcY = (atoi(&holdchar)) * 32;//y gets the held value
-					srcX = (atoi(&c)-1) * 32;//x gets the new value and we minus 1 to adjust for 0 start index
+					srcY = (atoi(&holdchar)) * yPixDim;//y gets the held value
+					srcX = (atoi(&c)-1) * xPixDim;//x gets the new value and we minus 1 to adjust for 0 start index
 					mapFile.ignore();//ignore the next value because we know its a comma
 				}
 			}
 			else
 			{
 				srcY = 0;
-				srcX = (atoi(&holdchar)-1) * 32;
+				srcX = (atoi(&holdchar)-1) * xPixDim;
 			}
 
-			Game::AddTile(srcX, srcY, x * 32, y * 32);
+			Game::AddTile(srcX, srcY, x * xPixDim, y * yPixDim);
 
 		}
 		std::cout << endl;
