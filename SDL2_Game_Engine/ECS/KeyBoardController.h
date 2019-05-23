@@ -23,20 +23,84 @@ public:
 
 	void update() override
 	{
+	/**	//is a key down?
+		if (Game::event.type == SDL_KEYDOWN)
+		{
+			//determining based on key down whether to give certain kinds of forces to our player for wasd inputs
+			//other actions to be added
+			switch (Game::event.key.keysym.sym)
+			{
+			case SDLK_w:
+				transform->velocity.y = -10;
+				sprite->Play("RollUp");
+				wdown = true;
+				break;
+			case SDLK_a:
+				transform->velocity.x = -10;
+				sprite->Play("RollLeft");
+				break;
+			case SDLK_d:
+				transform->velocity.x = 10;
+				sprite->Play("RollRight");
+				break;
+			case SDLK_s:
+				transform->velocity.y = 10;
+				sprite->Play("RollDown");
+				break;
+			case SDLK_SPACE:
+				sprite->Play("Blast");
+				break;
+			default:
+				break;
+			}
+		}
+
+		//is the key no longer down?
+		if (Game::event.type == SDL_KEYUP)
+		{
+			switch (Game::event.key.keysym.sym)
+			{
+			case SDLK_w:
+				//for now we are setting to zero automatically but this will probably need cahnged when gravity is properly iplemented with collison detection
+				transform->velocity.y = 0;
+				sprite->Play("Idle");
+				break;
+			case SDLK_a:
+				transform->velocity.x = 0;
+				sprite->Play("Idle");
+				break;
+			case SDLK_d:
+				transform->velocity.x = 0;
+				sprite->Play("Idle");
+				break;
+			case SDLK_s:
+				//for now we are setting to zero automatically but this will probably need cahnged when gravity is properly iplemented with collison detection
+				transform->velocity.y = 0;
+				sprite->Play("Idle");
+				break;
+			case SDLK_SPACE:
+				sprite->Play("Idle");
+				break;
+			default:
+				break;
+			}
+		}
+		**/
+
 		//is the key no longer down?
 		if (Game::event.type == SDL_KEYUP)
 		{
 			if (Game::event.key.keysym.sym == SDLK_w && wdown == true)
 			{
 				transform->velocity.y = 0;
-				sprite->Play("Idle");
+				
 				wdown = false;
 				sdown = false;
 			}
 			if (Game::event.key.keysym.sym == SDLK_a && adown == true)
 			{
 				transform->velocity.x = 0;
-				sprite->Play("Idle");
+				
 				adown = false;
 				ddown = false;
 			}
@@ -44,21 +108,26 @@ public:
 			{
 
 				transform->velocity.x = 0;
-				sprite->Play("Idle");
+				
 				adown = false;
 				ddown = false;
 			}
 			if (Game::event.key.keysym.sym == SDLK_s && sdown == true)
 			{
 				transform->velocity.y = 0;
-				sprite->Play("Idle");
+				
 				sdown = false;
 				wdown = false;
 			}
 			if (Game::event.key.keysym.sym == SDLK_SPACE && spacedown == true)
 			{
-				sprite->Play("Idle");
+				
 				spacedown = false;
+			}
+			//we dont want to go into idle unless we aren't moving
+			if (!wdown && !sdown && !ddown && !adown)
+			{
+				sprite->Play("Idle");
 			}
 		}
 
@@ -72,7 +141,7 @@ public:
 				transform->velocity.y = -10;
 				sprite->Play("RollUp");
 				wdown = true;
-				
+
 			}
 			if (Game::event.key.keysym.sym == SDLK_a && adown == false)
 			{
@@ -82,10 +151,10 @@ public:
 			}
 			if (Game::event.key.keysym.sym == SDLK_d && ddown == false)
 			{
-			
+
 				transform->velocity.x = 10;
 				sprite->Play("RollRight");
-				
+
 				ddown = true;
 			}
 			if (Game::event.key.keysym.sym == SDLK_s && sdown == false)
@@ -100,8 +169,6 @@ public:
 				spacedown = true;
 			}
 		}
-
-		
 	}
 
 
