@@ -34,6 +34,8 @@ public:
 	//hold animations, taking in animation name, and an Animation object called animations
 	std::map<const char*, Animation> animations;
 	
+	SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
+
 	//create sprite component based path to texture img, starting img render points, number of horizontalxvertical pixels of source to render, and scaling
 	SpriteComponent(const char* path)
 	{
@@ -109,10 +111,10 @@ public:
 		//set up our scaled sprite img
 		destRect.h = transform->height * transform->hScale;
 	}
-	//draws our sprite using the specified texture, pixel selection, and scaling
+	//draws our sprite using the specified texture, pixel selection, and scaling, and sprite orientation via spriteFlip
 	void draw() override
 	{
-		TextureManager::Draw(texture, srcRect, destRect);
+		TextureManager::Draw(texture, srcRect, destRect, spriteFlip);
 	}
 	//changes current frames and index needed for changing animation
 	void Play(const char* animName)

@@ -10,6 +10,7 @@ class KeyBoardController : public Component
 	bool sdown = false;
 	bool ddown = false;
 	bool spacedown = false;
+	bool isIdle = false;
 public:
 	//pointer to our transform component
 	TransformComponent *transform;
@@ -23,7 +24,7 @@ public:
 
 	void update() override
 	{
-	/**	//is a key down?
+		/** //is a key down?
 		if (Game::event.type == SDL_KEYDOWN)
 		{
 			//determining based on key down whether to give certain kinds of forces to our player for wasd inputs
@@ -61,7 +62,7 @@ public:
 			switch (Game::event.key.keysym.sym)
 			{
 			case SDLK_w:
-				//for now we are setting to zero automatically but this will probably need cahnged when gravity is properly iplemented with collison detection
+				//for now we are setting to zero automatically but this will probably need changed when gravity is properly iplemented with collison detection
 				transform->velocity.y = 0;
 				sprite->Play("Idle");
 				break;
@@ -74,7 +75,7 @@ public:
 				sprite->Play("Idle");
 				break;
 			case SDLK_s:
-				//for now we are setting to zero automatically but this will probably need cahnged when gravity is properly iplemented with collison detection
+				//for now we are setting to zero automatically but this will probably need changed when gravity is properly iplemented with collison detection
 				transform->velocity.y = 0;
 				sprite->Play("Idle");
 				break;
@@ -85,9 +86,10 @@ public:
 				break;
 			}
 		}
-		**/
+		/**/
 
 		//is the key no longer down?
+		//
 		if (Game::event.type == SDL_KEYUP)
 		{
 			if (Game::event.key.keysym.sym == SDLK_w && wdown == true)
@@ -123,12 +125,16 @@ public:
 			{
 				
 				spacedown = false;
+				
 			}
 			//we dont want to go into idle unless we aren't moving
-			if (!wdown && !sdown && !ddown && !adown)
+			else if (!wdown && !sdown && !ddown && !adown && !isIdle)
 			{
 				sprite->Play("Idle");
+				isIdle = true;
+				
 			}
+			
 		}
 
 		//is a key down?
@@ -145,13 +151,14 @@ public:
 			}
 			if (Game::event.key.keysym.sym == SDLK_a && adown == false)
 			{
+				//sprite->spriteFlip = SDL_FLIP_HORIZONTAL;
 				transform->velocity.x = -10;
 				sprite->Play("RollLeft");
 				adown = true;
 			}
 			if (Game::event.key.keysym.sym == SDLK_d && ddown == false)
 			{
-
+				//sprite->spriteFlip = SDL_FLIP_NONE;
 				transform->velocity.x = 10;
 				sprite->Play("RollRight");
 
@@ -168,7 +175,9 @@ public:
 				sprite->Play("Blast");
 				spacedown = true;
 			}
+			isIdle = false;
 		}
+		//
 	}
 
 
