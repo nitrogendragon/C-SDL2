@@ -1,6 +1,7 @@
 #pragma once
 #include "Components.h"
 #include "../Vector2D.h"
+
 //component class for getting, setting up, and updating x,y position of entities
 //TransformComponent member function can take in x and y floast for position, ints for height and width and floats for width and height scaling
 //form TransformComponent(float x, float y, int h, int w, float wscale, float hscale)    .... can also take just x and y floats
@@ -25,13 +26,28 @@ public:
 	int xspeed = 5;
 	int yspeed = 3;
 	
-	
+	// width of our window
+	static int windowWidth;
+	//height of our window
+	static int windowHeight;
 	
 	//sets position of the entity
 	TransformComponent()
 	{
 		//zero's out our position
 		position.Zero();
+	}
+
+	// sets position of the entity in the center of the screen and sets height, width and scaling use if not setting via Sprite
+	TransformComponent(int h, int w, int wscale, int hscale)
+	{
+		cout << windowWidth << endl;
+		position.x = windowWidth / 2;
+		position.y =  windowHeight/2;
+		height = h;
+		width = w;
+		wScale = wscale;
+		hScale = hscale;
 	}
 
 	// sets position of the entity as well as height, width and scaling use if not setting via Sprite
@@ -74,10 +90,7 @@ public:
 	void update() override
 	{	//updates positions with vector normalizing probably
 		normalize();
-		//handles x position updates from movement
-		//position.x += velocity.x * xspeed;
-		//handles y position updates from movement
-		//position.y += velocity.y * yspeed;
+		
 	}
 
 

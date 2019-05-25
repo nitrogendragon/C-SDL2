@@ -2,8 +2,10 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "Map.h"
+
+
 #include <iostream>
-#include <vector>
+#include <vector> 
 //declaration of ColliderComponent
 class ColliderComponent;
 using namespace std;
@@ -28,13 +30,12 @@ public:
 	static SDL_Event event;
 	//holds our colliders
 	static std::vector<ColliderComponent*> colliders;
-
+	
 
 private:
 	int cnt = 0;//cnt for various purposes but mostly not needed
 	bool isRunning = false;//is the game running?
 	SDL_Window *window;//pointer to our window
-	
 
 		
 };

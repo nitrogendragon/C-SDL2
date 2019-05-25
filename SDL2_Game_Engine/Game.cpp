@@ -5,6 +5,7 @@
 #include "ECS/Components.h"
 #include "Vector2D.h"
 #include "Collision.h"
+#include "ECS/TransformComponent.h"
 
 using namespace std;
 Map* map1;
@@ -16,9 +17,10 @@ Manager manager;
 vector<ColliderComponent*> Game::colliders;
 //creates and adds a player Entity to our manager
 auto& player(manager.addEntity());
-
-//creates a wall
-auto& wall(manager.addEntity());
+//holds window Width
+int winWidth;
+//holds window Height
+int winHeight;
 
 const char* mapfile = "Assets/WorldPieces_32x32.png";
 //labels for our groups
@@ -32,7 +34,7 @@ enum groupLabels : std::size_t
 
 Game::Game()
 {
-
+	
 }
 
 
@@ -54,6 +56,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		cout << "Subsystems Initialized!..." << endl;//just letting us know that we have initialized everything
 
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);//create our window with a title position and dimensions assuming flags is 1 which it should be
+		winWidth = width;
+		
+		winHeight = height;
+		cout << winWidth << " " << winHeight << endl;
 		if (window)// if true or 1 which it should be
 		{
 			cout << "Window created" << endl;// let us know we created the window
@@ -73,13 +79,17 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 
 
-
+	
 	//ecs implementation
 	//loads our map TMap which is a tilemap of 32x32 pixel tiles
 	Map::LoadMap("Assets/TMap_60x30.txt", 60, 30);
-
-	//gives our player a position, height, width and height and width scaling component
-	player.addComponent<TransformComponent>(100, 100, 64, 64, 3, 3);
+	
+	/*gives our player a position in the center of the screen, height, width and height and width scaling component
+	*note that we need to adjust position by half of the size of the entity * scale to center 
+	*also note that for whatever reason the window is backwards so winHeight seems to deal with width and visa versa for winWidth
+	*/
+	player.addComponent<TransformComponent>((winWidth/2-96), (winHeight/2-96), 64, 64, 3, 3);
+	cout << player.getComponent<TransformComponent>().position.x << " " << player.getComponent<TransformComponent>().position.y << endl;
 	//gives our player a sprite component and sets it to ninjagirl_66x88.png
 	player.addComponent<SpriteComponent>("Assets/slime_animated_64x64_15x15x5x5x5x5_frames.png", true);
 	//let us control our player among other things
