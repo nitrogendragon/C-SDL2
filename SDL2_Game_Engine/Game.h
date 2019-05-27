@@ -12,6 +12,8 @@ using namespace std;
 class Game
 {
 public:
+	int winWidth = 1920;
+	int winHeight = 1024;
 	Game();
 	~Game();
 	void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
@@ -22,7 +24,7 @@ public:
 	void clean();//clear game of memory
 	bool running() { return isRunning; }
 
-	//another method to add tiles taking in srcX and Y dimensions and x and y
+	//another method to add tiles taking in srcX and Y dimensions and x and y positions
 	static void AddTile(int srcX, int srcY, int xpos, int ypos);
 	//pointer of type SDL_Renderer
 	static SDL_Renderer* renderer;
@@ -30,11 +32,12 @@ public:
 	static SDL_Event event;
 	//holds our colliders
 	static std::vector<ColliderComponent*> colliders;
-	
+	static bool isRunning;//is the game running?
+	static SDL_Rect camera;//camera object for the game
 
 private:
 	int cnt = 0;//cnt for various purposes but mostly not needed
-	bool isRunning = false;//is the game running?
+	
 	SDL_Window *window;//pointer to our window
 
 		

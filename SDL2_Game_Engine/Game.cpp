@@ -14,15 +14,17 @@ SDL_Event Game::event;//SDL_Event event variable
 //creates a Manager class instance manager in our game
 Manager manager;
 //creates a tilecomponent instance
-TileComponent tileManager;
+//TileComponent tileManager;
+
+SDL_Rect Game::camera{ 0,0,1920,1024};
+
 //gives access to our list of collider components
 vector<ColliderComponent*> Game::colliders;
+
+bool Game::isRunning = false;
 //creates and adds a player Entity to our manager
 auto& player(manager.addEntity());
-//holds window Width
-int winWidth;
-//holds window Height
-int winHeight;
+
 //holds players xvel as an int..
 int pVelX = NULL;
 //holds players y velocity as an int..
@@ -69,8 +71,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);//create our window with a title position and dimensions assuming flags is 1 which it should be
 		winWidth = width;
-		
 		winHeight = height;
+		camera = { 0,0,winWidth,winHeight };
 		cout << winWidth << " " << winHeight << endl;
 		if (window)// if true or 1 which it should be
 		{
@@ -135,7 +137,22 @@ void Game::update()//function for updating the game
 	//runs the managers update function to update all the components
 	manager.update();
 
-	tileManager.ScrollTiles(player,tiles);
+	//tileManager.ScrollTiles(player,tiles);
+
+	camera.x = player.getComponent<TransformComponent>().position.x - winWidth / 2
+		+(player.getComponent<TransformComponent>().wScale * player.getComponent<TransformComponent>().width / 2);
+	camera.y = player.getComponent<TransformComponent>().position.y - winHeight / 2
+		+ (player.getComponent<TransformComponent>().hScale * player.getComponent<TransformComponent>().height / 2);
+	/*
+	if (camera.x < 0)
+		camera.x = 0;
+	if (camera.y < 0)
+		camera.y = 0;
+	if (camera.x > camera.w)
+		camera.x = camera.w;
+	if (camera.y > camera.h)
+		camera.y = camera.h;
+	*/
 
 	//checking for our player and wall collision
 	for (auto cc : colliders) 

@@ -103,9 +103,9 @@ public:
 		srcRect.y = animIndex * transform->height;
 
 		//sets our sprites x position to the x position of the entity
-		destRect.x = static_cast<int>(transform->position.x);
+		destRect.x = static_cast<int>(transform->position.x) - Game::camera.x;
 		//sets our sprites y position to the y position of the entity
-		destRect.y = static_cast<int>(transform->position.y);
+		destRect.y = static_cast<int>(transform->position.y) - Game::camera.y;
 		//set up our scaled sprite img 
 		destRect.w = transform->width * transform->wScale;
 		//set up our scaled sprite img

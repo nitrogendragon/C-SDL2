@@ -42,8 +42,8 @@ public:
 	{
 		
 		
-		position.x = winWidth/ 2 - w/2 * wscale;
-		position.y = winHeight/ 2 - h/2 * hscale;
+		position.x = winWidth/ 2 + w * wscale;
+		position.y = winHeight/ 2 - h * hscale;
 		height = h;
 		width = w;
 		wScale = wscale;
@@ -78,8 +78,8 @@ public:
 		{
 			xvel = int((velocity.x * xspeed) / m);
 			yvel = int((velocity.y * yspeed) / m);
-			//position.x += xvel;
-			//position.y += yvel;
+			position.x += xvel;
+			position.y += yvel;
 
 		}
 	}

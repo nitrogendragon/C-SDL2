@@ -176,7 +176,13 @@ public:
 				transform->velocity.y = 0;
 				sprite->Play("Blast");
 				spacedown = true;
+				
 			}
+			if (Game::event.key.keysym.sym == SDLK_ESCAPE )
+			{
+				Game::isRunning = false;
+			}
+			
 			isIdle = false;
 		}
 		//
