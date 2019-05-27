@@ -95,14 +95,14 @@ public:
 			if (Game::event.key.keysym.sym == SDLK_w && wdown == true)
 			{
 				transform->velocity.y = 0;
-				
+				transform->yvel = 0;
 				wdown = false;
 				sdown = false;
 			}
 			if (Game::event.key.keysym.sym == SDLK_a && adown == true)
 			{
 				transform->velocity.x = 0;
-				
+				transform->xvel = 0;
 				adown = false;
 				ddown = false;
 			}
@@ -110,14 +110,14 @@ public:
 			{
 
 				transform->velocity.x = 0;
-				
+				transform->xvel = 0;
 				adown = false;
 				ddown = false;
 			}
 			if (Game::event.key.keysym.sym == SDLK_s && sdown == true)
 			{
 				transform->velocity.y = 0;
-				
+				transform->yvel = 0;
 				sdown = false;
 				wdown = false;
 			}

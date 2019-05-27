@@ -13,6 +13,8 @@ SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;//SDL_Event event variable
 //creates a Manager class instance manager in our game
 Manager manager;
+//creates a tilecomponent instance
+TileComponent tileManager;
 //gives access to our list of collider components
 vector<ColliderComponent*> Game::colliders;
 //creates and adds a player Entity to our manager
@@ -21,7 +23,10 @@ auto& player(manager.addEntity());
 int winWidth;
 //holds window Height
 int winHeight;
-
+//holds players xvel as an int..
+int pVelX = NULL;
+//holds players y velocity as an int..
+int pVelY = NULL;
 const char* mapfile = "Assets/WorldPieces_32x32.png";
 //labels for our groups
 enum groupLabels : std::size_t
@@ -31,6 +36,13 @@ enum groupLabels : std::size_t
 	groupEnemies,
 	groupColliders
 };
+
+//map objects list aka tiles list
+auto&tiles(manager.getGroup(groupMap));
+//players list
+auto& players(manager.getGroup(groupPlayers));
+//enemies list
+auto& enemies(manager.getGroup(groupEnemies));
 
 Game::Game()
 {
@@ -75,11 +87,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = true;//we are running
 	}
 	//make a new Map map
-	map1 = new Map();
+	//map1 = new Map();
 
-
-
-	
 	//ecs implementation
 	//loads our map TMap which is a tilemap of 32x32 pixel tiles
 	Map::LoadMap("Assets/TMap_60x30.txt", 60, 30);
@@ -88,7 +97,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	*note that we need to adjust position by half of the size of the entity * scale to center 
 	*also note that for whatever reason the window is backwards so winHeight seems to deal with width and visa versa for winWidth
 	*/
-	player.addComponent<TransformComponent>((winWidth/2-96), (winHeight/2-96), 64, 64, 3, 3);
+	player.addComponent<TransformComponent>(64, 64, 3, 3);
 	cout << player.getComponent<TransformComponent>().position.x << " " << player.getComponent<TransformComponent>().position.y << endl;
 	//gives our player a sprite component and sets it to ninjagirl_66x88.png
 	player.addComponent<SpriteComponent>("Assets/slime_animated_64x64_15x15x5x5x5x5_frames.png", true);
@@ -125,6 +134,9 @@ void Game::update()//function for updating the game
 	manager.refresh();
 	//runs the managers update function to update all the components
 	manager.update();
+
+	tileManager.ScrollTiles(player,tiles);
+
 	//checking for our player and wall collision
 	for (auto cc : colliders) 
 	{
@@ -132,12 +144,7 @@ void Game::update()//function for updating the game
 	}
 
 }
-//map objects list aka tiles list
-auto&tiles(manager.getGroup(groupMap));
-//players list
-auto& players(manager.getGroup(groupPlayers));
-//enemies list
-auto& enemies(manager.getGroup(groupEnemies));
+
 
 
 void Game::render()//function for rendering the game

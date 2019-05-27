@@ -9,7 +9,8 @@
 class TileComponent : public Component
 {
 public:
-
+	int pVelX;
+	int pVelY;
 	SDL_Texture* texture;
 	SDL_Rect srcRect, destRect;
 
@@ -34,7 +35,18 @@ public:
 		destRect.y = ypos;
 		destRect.w = destRect.h = 32;
 	}
+	//takes in an entity "the player" and gets their velocity to know how fast to move the tiles.
+	void ScrollTiles(Entity&player, std::vector<Entity*> tiles)
+	{
+		pVelX = player.getComponent<TransformComponent>().xvel;
+		pVelY = player.getComponent<TransformComponent>().yvel;
 
+		for (auto t : tiles)
+		{
+			t->getComponent<TileComponent>().destRect.x += -(pVelX);
+			t->getComponent<TileComponent>().destRect.y += -(pVelY);
+		}
+	}
 	void draw() override
 	{
 		TextureManager::Draw(texture, srcRect, destRect, SDL_FLIP_NONE);

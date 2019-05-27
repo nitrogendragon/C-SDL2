@@ -5,6 +5,7 @@
 //component class for getting, setting up, and updating x,y position of entities
 //TransformComponent member function can take in x and y floast for position, ints for height and width and floats for width and height scaling
 //form TransformComponent(float x, float y, int h, int w, float wscale, float hscale)    .... can also take just x and y floats
+// TransformComponent(int h, int w, float wscale, float hscale, int winWidth = 1920, int winHeight = 1024)sets position of the entity in the center of the screen based on current settings of 1920x1024 and sets height, width and scaling use if not setting via Sprite
 class TransformComponent : public Component
 {
 private:
@@ -26,10 +27,8 @@ public:
 	int xspeed = 5;
 	int yspeed = 3;
 	
-	// width of our window
-	static int windowWidth;
-	//height of our window
-	static int windowHeight;
+	int xvel = 0;
+	int yvel = 0;
 	
 	//sets position of the entity
 	TransformComponent()
@@ -38,12 +37,13 @@ public:
 		position.Zero();
 	}
 
-	// sets position of the entity in the center of the screen and sets height, width and scaling use if not setting via Sprite
-	TransformComponent(int h, int w, int wscale, int hscale)
+	// sets position of the entity in the center of the screen based on current settings of 1920x1024 and sets height, width and scaling use if not setting via Sprite
+	TransformComponent(int h, int w, int wscale, int hscale, int winWidth=1920, int winHeight = 1024)
 	{
-		cout << windowWidth << endl;
-		position.x = windowWidth / 2;
-		position.y =  windowHeight/2;
+		
+		
+		position.x = winWidth/ 2 - w/2 * wscale;
+		position.y = winHeight/ 2 - h/2 * hscale;
 		height = h;
 		width = w;
 		wScale = wscale;
@@ -67,18 +67,19 @@ public:
 	{
 
 		//getting the magnitude
-		//return sqrt((xspeed * velocity.x * velocity.x) + (yspeed * velocity.y * velocity.y));
 		return sqrt(( velocity.x * velocity.x) + ( velocity.y * velocity.y));
 	}
-	//normalizes speed when presses keys for x and y directions simultaneously but also lags game so i dont really want to touch it right now
+	//normalizes speed when applicable..no longer moves character for now due to tile scrolling implementation
 	void normalize()
 	{
 		float m = mag(velocity.x, velocity.y);
 
 		if (m > 1)
 		{
-			position.x += int((velocity.x * xspeed) / m);
-			position.y += int((velocity.y * yspeed) / m);
+			xvel = int((velocity.x * xspeed) / m);
+			yvel = int((velocity.y * yspeed) / m);
+			//position.x += xvel;
+			//position.y += yvel;
 
 		}
 	}
