@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="60" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="1">
  <tileset firstgid="1" source="WorldPieces_32x32.tsx"/>
- <tileset firstgid="41" name="colliders_32x32" tilewidth="32" tileheight="32" tilecount="40" columns="10">
-  <image source="colliders_32x32.png" trans="aaaa00" width="320" height="128"/>
- </tileset>
+ <tileset firstgid="41" source="colliders_32x32.tsx"/>
  <layer id="1" name="Tile Layer 1" width="60" height="30">
   <data encoding="csv">
 11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,
