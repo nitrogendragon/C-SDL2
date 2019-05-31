@@ -17,10 +17,8 @@ Manager manager;
 //TileComponent tileManager;
 
 SDL_Rect Game::camera{ 0,0,1920,1024};
-
-//gives access to our list of collider components
-vector<ColliderComponent*> Game::colliders;
-
+SDL_Rect playerCol;//variable for holding our players collider
+Vector2D playerPos = NULL;//variable for holding our players collider
 bool Game::isRunning = false;
 //creates and adds a player Entity to our manager
 auto& player(manager.addEntity());
@@ -29,22 +27,10 @@ auto& player(manager.addEntity());
 int pVelX = NULL;
 //holds players y velocity as an int..
 int pVelY = NULL;
-const char* mapfile = "Assets/WorldPieces_32x32.png";
-//labels for our groups
-enum groupLabels : std::size_t
-{
-	groupMap,
-	groupPlayers,
-	groupEnemies,
-	groupColliders
-};
 
-//map objects list aka tiles list
-auto&tiles(manager.getGroup(groupMap));
-//players list
-auto& players(manager.getGroup(groupPlayers));
-//enemies list
-auto& enemies(manager.getGroup(groupEnemies));
+//labels for our groups
+
+
 
 Game::Game()
 {
@@ -89,11 +75,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = true;//we are running
 	}
 	//make a new Map map
-	//map1 = new Map();
+	map1 = new Map("Assets/WorldPieces_32x32.png", 3, 32);
 
 	//ecs implementation
 	//loads our map TMap which is a tilemap of 32x32 pixel tiles
-	Map::LoadMap("Assets/TMap_60x30.txt", 60, 30);
+	map1->LoadMap("Assets/TMap_60x30.txt", 60, 30);
 	
 	/*gives our player a position in the center of the screen, height, width and height and width scaling component
 	*note that we need to adjust position by half of the size of the entity * scale to center 
@@ -115,6 +101,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 }
 
+auto& tiles(manager.getGroup(Game::groupMap));
+auto& players(manager.getGroup(Game::groupPlayers));
+auto& colliders(manager.getGroup(Game::groupColliders));
 void Game::handleEvents() //function for handling game events
 {
 	
@@ -132,10 +121,23 @@ void Game::handleEvents() //function for handling game events
 
 void Game::update()//function for updating the game
 {
+	playerCol = player.getComponent<ColliderComponent>().collider;//variable for holding our players collider
+	playerPos = player.getComponent<TransformComponent>().position;//variable for holding our player position
 	//moving through our games entities each frame and getting rid of those that aren't there/active anymore
 	manager.refresh();
 	//runs the managers update function to update all the components
 	manager.update();
+
+	for (auto&c : colliders)
+	{
+		SDL_Rect cCol = c->getComponent<ColliderComponent>().collider;
+		if (Collision::AABB(cCol, playerCol))//if player hits a collider
+		{
+			//player.getComponent<TransformComponent>().xvel = 0;//stop movement in x direction
+			//player.getComponent<TransformComponent>().yvel = 0;//stop movement in y direction
+			player.getComponent<TransformComponent>().position = playerPos;//reset position to where it was
+		}
+	}
 
 	//tileManager.ScrollTiles(player,tiles);
 
@@ -154,11 +156,7 @@ void Game::update()//function for updating the game
 		camera.y = camera.h;
 	*/
 
-	//checking for our player and wall collision
-	for (auto cc : colliders) 
-	{
-		Collision::AABB(player.getComponent<ColliderComponent>(), *cc);
-	}
+
 
 }
 
@@ -173,16 +171,16 @@ void Game::render()//function for rendering the game
 	{
 		t->draw();
 	}
+	for (auto& c : colliders)
+	{
+		c->draw();
+	}
 	//draws our players
 	for (auto& p : players)
 	{
 		p->draw();
 	}
-	//draws our enemies
-	for (auto& e : enemies)
-	{
-		e->draw();
-	}
+
 	//this is where we add stuff to render
 	//order determines layer.. first in the back last in the front
 
@@ -197,13 +195,5 @@ void Game::clean()//clear game of memory
 }
 
 
-//implementation of our addtile Game Class function
-//takes in (int x, int y, int id, int h, int w) for position x and y, tile id, and height and width which have default values of 32
-void Game::AddTile(int srcX, int srcY, int xpos, int ypos)
-{
-	auto& tile(manager.addEntity());
-	tile.addComponent<TileComponent>(srcX, srcY, xpos, ypos, mapfile);
-	tile.addGroup(groupMap);
 
-}
 

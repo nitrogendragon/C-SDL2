@@ -2,9 +2,10 @@
 #include <string>
 #include "SDL.h"
 #include "Components.h"
+#include "../TextureManager.h"
 using namespace std;
 //colliderComponent is derived from our component class
-//when calling the ColliderComponent Constructor it takes in (string t) for the tag name
+//when calling the ColliderComponent Constructor it takes in (string t) for the tag name, and an int xpos,int ypos and int size var
 class ColliderComponent : public Component
 {
 public:
@@ -13,6 +14,12 @@ public:
 	//add tags for collision detection and find out if its for example: play,er enemy, wall, etc
 	string tag;
 
+
+	SDL_Texture* tex;//texture for our collider
+	SDL_Rect srcR, destR;//src and destination rects for our collider
+
+
+
 	//collider needs access to transform component  so pointer to transform
 	TransformComponent* transform;
 	//constructor to set up tag for now
@@ -20,7 +27,13 @@ public:
 	{
 		tag = t;
 	}
-
+	ColliderComponent(string t, int xpos, int ypos, int size)
+	{
+		tag = t;
+		collider.x = xpos;
+		collider.y = ypos;
+		collider.h = collider.w = size;
+	}
 	//override our initializer function
 	void init() override
 	{
@@ -32,20 +45,38 @@ public:
 		//set transform equal to the entities adress of its TransformComponent, so basically wherever the transformcomponent is stored, that is where our transform will be working in
 		transform = &entity->getComponent<TransformComponent>();
 
-		//add this collider component to our games colliders list
-		Game::colliders.push_back(this);
+
+		tex = TextureManager::LoadTexture("assets/boxcoltex_32x32.png");//loads our collider texture
+		
+		srcR = { 0,0,32,32 };//the origin point in upper left bounds 0,0 for starting the rect and its dims 32x32
+		
+		destR = { collider.x, collider.y, collider.w, collider.h };
+		
 	}
 	//taking care of position of hit/collider box updating
 	void update() override
 	{
-		//setting up our collider x position equal to our transforms position
-		collider.x = static_cast<int>(transform->position.x);
-		//setting up our collider x position equal to our transforms position
-		collider.y = static_cast<int>(transform->position.y);
-		//set up the width value of the box collider based on our transforms width
-		collider.w = transform->width * transform->wScale;
-		//set up the height value of the box collider based on our transforms height
-		collider.h = transform->height * transform->hScale;
+		if (tag != "terrain")
+		{
+			
+			//setting up our collider x position equal to our transforms position
+			collider.x = static_cast<int>(transform->position.x+(transform->width*.365f * transform->wScale));
+			//setting up our collider x position equal to our transforms position
+			collider.y = static_cast<int>(transform->position.y+(transform->height*.675f * transform->hScale));
+			//set up the width value of the box collider based on our transforms width
+			collider.w = transform->width * transform->wScale / 3;
+			//set up the height value of the box collider based on our transforms height
+			collider.h = transform->height * transform->hScale / 3;
+			destR = { collider.x, collider.y, collider.w, collider.h };
+			
+		}
+		destR.x = collider.x - Game::camera.x;
+		destR.y = collider.y - Game::camera.y;
 
+	}
+
+	void draw() override
+	{
+		TextureManager::Draw(tex, srcR, destR, SDL_FLIP_NONE);
 	}
 };
