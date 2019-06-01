@@ -31,6 +31,7 @@ public:
 	static SDL_Event event;
 	static bool isRunning;//is the game running?
 	static SDL_Rect camera;//camera object for the game
+	
 	enum groupLabels : std::size_t
 	{
 		groupMap,

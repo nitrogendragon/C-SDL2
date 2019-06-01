@@ -8,6 +8,8 @@ using namespace std;
 //when calling the ColliderComponent Constructor it takes in (string t) for the tag name, and an int xpos,int ypos and int size var
 class ColliderComponent : public Component
 {
+private:
+
 public:
 	//add area to represent collision area
 	SDL_Rect collider;
@@ -27,6 +29,7 @@ public:
 	{
 		tag = t;
 	}
+	//more complex constructor taking in position and size information
 	ColliderComponent(string t, int xpos, int ypos, int size)
 	{
 		tag = t;
