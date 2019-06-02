@@ -12,15 +12,23 @@ public:
 	
 	Vector2D initPosition;
 	bool isAnimated = true;
+	int xScale = 1;
+	int yScale = 1;
 	int range = 0;
 	int speed = 0;
 	int distance = 0;
 	int projectileIndex = 0;
 	TransformComponent* transform;
 	Vector2D velocity;
-	//takes in range and speed ints
-	ProjectileComponent(Vector2D pos, int rng, int sp, int velX, int velY, int pIndex, bool isAnim) 
+	ProjectileComponent()
 	{
+
+	}
+	//takes in range and speed ints
+	ProjectileComponent(Vector2D pos, int xscale, int yscale, int rng, int sp, int velX, int velY, int pIndex, bool isAnim) 
+	{
+		yScale = yscale;
+		xScale = xscale;
 		initPosition = pos;
 		range = rng; 
 		speed = sp;
@@ -37,17 +45,16 @@ public:
 	void resetProjectile(Entity* projectile)
 	{
 		entity = projectile;
+
 		//for now just for fun we will make a new one even though it's gonna be resource intensive
-		Vector2D initPos = entity->getComponent<ProjectileComponent>().initPosition;
-		bool isAnimated = entity->getComponent<ProjectileComponent>().isAnimated;
-
-		int range = entity->getComponent<ProjectileComponent>().range;
-		int speed = entity->getComponent<ProjectileComponent>().speed;
-
-		int projectileIndex = entity->getComponent<ProjectileComponent>().projectileIndex;
-		Vector2D velocity = entity->getComponent<ProjectileComponent>().velocity;
-
-		Game::assets->CreateProjectile(initPos, velocity, range, speed, projectileIndex, isAnimated);
+		Game::assets->CreateProjectile(entity->getComponent<ProjectileComponent>().initPosition
+			, entity->getComponent<ProjectileComponent>().velocity
+			, entity->getComponent<ProjectileComponent>().xScale
+			, entity->getComponent<ProjectileComponent>().yScale
+			, entity->getComponent<ProjectileComponent>().range
+			, entity->getComponent<ProjectileComponent>().speed
+			, entity->getComponent<ProjectileComponent>().projectileIndex
+			, entity->getComponent<ProjectileComponent>().isAnimated);
 		cout << "we should have created something" << endl;
 		entity->destroy();
 	}

@@ -11,12 +11,12 @@ AssetManager::~AssetManager()
 
 }
 
-void AssetManager::CreateProjectile(Vector2D pos, Vector2D vel, int range, int speed, int projectilesIndex, bool isAnim = false)
+void AssetManager::CreateProjectile(Vector2D pos, Vector2D vel, int xscale, int yscale, int range, int speed, int projectilesIndex, bool isAnim = false)
 {
 	auto& projectile(manager->addEntity());
-	projectile.addComponent<TransformComponent>(pos.x, pos.y, 32, 32, 1, 1);
+	projectile.addComponent<TransformComponent>(pos.x, pos.y, 32, 32, xscale, yscale);
 	projectile.addComponent<SpriteComponent>(projectiles[projectilesIndex], isAnim);
-	projectile.addComponent<ProjectileComponent>(pos, range, speed, vel.x, vel.y,projectilesIndex, isAnim);
+	projectile.addComponent<ProjectileComponent>(pos,xscale, yscale, range, speed, vel.x, vel.y,projectilesIndex, isAnim);
 	projectile.addComponent<ColliderComponent>("projectile");
 	projectile.addGroup(Game::groupProjectiles);
 }

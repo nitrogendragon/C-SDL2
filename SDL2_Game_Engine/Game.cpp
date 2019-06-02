@@ -7,6 +7,7 @@
 #include "Collision.h"
 #include "ECS/TransformComponent.h"
 #include "AssetManager.h"
+#include "ECS/ProjectileComponent.h"
 using namespace std;
 Map* map1;
 SDL_Renderer* Game::renderer = nullptr;
@@ -25,7 +26,7 @@ Vector2D playerPos = NULL;//variable for holding our players collider
 bool Game::isRunning = false;
 //creates and adds a player Entity to our manager
 auto& player(manager.addEntity());
-
+ProjectileComponent pComponents;
 //holds players xvel as an int..
 int pVelX = NULL;
 //holds players y velocity as an int..
@@ -106,18 +107,18 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	//adds player to groupPlayers groupLabel
 	player.addGroup(groupPlayers);
 
-	assets->CreateProjectile(Vector2D(600, 600),Vector2D(0,0), 1900, 2, 0, false);
-	assets->CreateProjectile(Vector2D(700, 600), Vector2D(2, 0), 1100, 2, 0, true);
-	assets->CreateProjectile(Vector2D(500, 600), Vector2D(-2, 0), 1300, 2, 0, true);
-	assets->CreateProjectile(Vector2D(900, 600), Vector2D(-1, 1), 1500, 2, 0, true);
-	assets->CreateProjectile(Vector2D(400, 600), Vector2D(1, -1), 1700, 2, 0, true);
+	assets->CreateProjectile(Vector2D(600, 600),Vector2D(0,0),3,3, 1900, 2, 0, false);
+	assets->CreateProjectile(Vector2D(700, 600), Vector2D(2, 0),3,3, 1100, 2, 0, true);
+	assets->CreateProjectile(Vector2D(500, 600), Vector2D(-2, 0),2,2, 1300, 2, 0, true);
+	assets->CreateProjectile(Vector2D(900, 600), Vector2D(-1, 1),4,4, 1500, 2, 0, true);
+	assets->CreateProjectile(Vector2D(400, 600), Vector2D(1, -1),5,5, 1700, 2, 0, true);
 
 }
 
 auto& tiles(manager.getGroup(Game::groupMap));
 auto& players(manager.getGroup(Game::groupPlayers));
 auto& colliders(manager.getGroup(Game::groupColliders));
-auto& theProjectiles(manager.getGroup(Game::groupProjectiles));
+std::vector<Entity*> &theProjectiles(manager.getGroup(Game::groupProjectiles));
 void Game::handleEvents() //function for handling game events
 {
 	
@@ -152,29 +153,16 @@ void Game::update()//function for updating the game
 			player.getComponent<TransformComponent>().position = playerPos;//reset position to where it was
 		}
 	}
-
-	for (auto&p : theProjectiles)
+	for (Entity * p : theProjectiles)
 	{
+		
 		
 		if (Collision::AABB(playerCol, p->getComponent<ColliderComponent>().collider))//if player hits a collider
 		{
-			std::cout << "the player was burned to ash" << std::endl;
-			//for now just for fun we will make a new one even though it's gonna be resource intensive
-			Vector2D initPos = p->getComponent<ProjectileComponent>().initPosition;
-			bool isAnimated = p->getComponent<ProjectileComponent>().isAnimated;
-			cout << isAnimated;
-			int range = p->getComponent<ProjectileComponent>().range;
-			int speed = p->getComponent<ProjectileComponent>().speed;
-			
-			int projectileIndex = p->getComponent<ProjectileComponent>().projectileIndex;
-			Vector2D velocity = p->getComponent<ProjectileComponent>().velocity;
-			
-			assets->CreateProjectile(initPos,velocity,range, speed, projectileIndex, isAnimated);
-			cout << "we should have created something" << endl;
-			p->destroy();//destroy the projectile
+			pComponents.resetProjectile(p);
+			p->destroy();
 		}
 	}
-
 	//tileManager.ScrollTiles(player,tiles);
 
 	camera.x = player.getComponent<TransformComponent>().position.x - winWidth / 2
