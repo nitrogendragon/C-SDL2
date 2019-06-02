@@ -1,12 +1,25 @@
 #include "AssetManager.h"
+#include "ECS/Components.h"
+#include "ECS/ProjectileComponent.h"
 
-
-
-AssetManager::AssetManager(Manager* man) : manager (man)
+AssetManager::AssetManager(Manager* man)
 {
-	
+	manager = man;
+}
+AssetManager::~AssetManager()
+{
+
 }
 
+void AssetManager::CreateProjectile(Vector2D pos, Vector2D vel, int range, int speed, int projectilesIndex, bool isAnim = false)
+{
+	auto& projectile(manager->addEntity());
+	projectile.addComponent<TransformComponent>(pos.x, pos.y, 32, 32, 1, 1);
+	projectile.addComponent<SpriteComponent>(projectiles[projectilesIndex], isAnim);
+	projectile.addComponent<ProjectileComponent>(pos, range, speed, vel.x, vel.y,projectilesIndex, isAnim);
+	projectile.addComponent<ColliderComponent>("projectile");
+	projectile.addGroup(Game::groupProjectiles);
+}
 //takes in file path and an id for the texture to be added and adds it
 void AssetManager::AddTexture(std::string id, const char* path)
 {
@@ -20,6 +33,4 @@ SDL_Texture* AssetManager::GetTexture(std::string id)
 }
 
 
-AssetManager::~AssetManager()
-{
-}
+

@@ -36,6 +36,7 @@ public:
 		collider.x = xpos;
 		collider.y = ypos;
 		collider.h = collider.w = size;
+		
 	}
 	//override our initializer function
 	void init() override
@@ -54,12 +55,23 @@ public:
 		srcR = { 0,0,32,32 };//the origin point in upper left bounds 0,0 for starting the rect and its dims 32x32
 		
 		destR = { collider.x, collider.y, collider.w, collider.h };
-		
+		if (tag == "player")
+		{
+			collider.w = transform->width * transform->wScale / 3;
+			//set up the height value of the box collider based on our transforms height
+			collider.h = transform->height * transform->hScale / 3;
+		}
+		else if (tag == "projectile")
+		{
+			collider.w = transform->width * transform->wScale / 3;
+			//set up the height value of the box collider based on our transforms height
+			collider.h = transform->height * transform->hScale / 3;
+		}
 	}
 	//taking care of position of hit/collider box updating
 	void update() override
 	{
-		if (tag != "terrain")
+		if (tag == "player")
 		{
 			
 			//setting up our collider x position equal to our transforms position
@@ -67,12 +79,19 @@ public:
 			//setting up our collider x position equal to our transforms position
 			collider.y = static_cast<int>(transform->position.y+(transform->height*.675f * transform->hScale));
 			//set up the width value of the box collider based on our transforms width
-			collider.w = transform->width * transform->wScale / 3;
-			//set up the height value of the box collider based on our transforms height
-			collider.h = transform->height * transform->hScale / 3;
-			destR = { collider.x, collider.y, collider.w, collider.h };
+			
+			destR = { collider.x, collider.y, collider.w, collider.h };//renders box over player
 			
 		}
+		else if (tag == "projectile")
+		{
+			//setting up our collider x position equal to our transforms position
+			collider.x = static_cast<int>(transform->position.x + (transform->width * transform->wScale));
+			//setting up our collider x position equal to our transforms position
+			collider.y = static_cast<int>(transform->position.y + (transform->height * transform->hScale));
+			destR = { collider.x, collider.y, collider.w, collider.h };//renders box over player
+		}
+		
 		destR.x = collider.x - Game::camera.x;
 		destR.y = collider.y - Game::camera.y;
 

@@ -6,7 +6,7 @@
 #include "Vector2D.h"
 #include "Collision.h"
 #include "ECS/TransformComponent.h"
-
+#include "AssetManager.h"
 using namespace std;
 Map* map1;
 SDL_Renderer* Game::renderer = nullptr;
@@ -16,7 +16,10 @@ Manager manager;
 //creates a tilecomponent instance
 //TileComponent tileManager;
 
-SDL_Rect Game::camera{ 0,0,1920,1024};
+SDL_Rect Game::camera{ 0,0,1920,1024};//our camera and its position and field of view
+
+AssetManager* Game::assets = new AssetManager(&manager);
+
 SDL_Rect playerCol;//variable for holding our players collider
 Vector2D playerPos = NULL;//variable for holding our players collider
 bool Game::isRunning = false;
@@ -74,8 +77,15 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		isRunning = true;//we are running
 	}
+
+	//Adding our textures to our assets manager
+
+	assets->AddTexture("terrain", "Assets/WorldPieces_32x32.png");
+	assets->AddTexture("player", "Assets/slime_animated_64x64_15x15x5x5x5x5_frames.png");
+	assets->AddTexture("slime_ki_blast", "Assets/slime_ki_blast_32x32_7.png");
+
 	//make a new Map map
-	map1 = new Map("Assets/WorldPieces_32x32.png", 3, 32);
+	map1 = new Map("terrain", 3, 32);
 
 	//ecs implementation
 	//loads our map TMap which is a tilemap of 32x32 pixel tiles
@@ -88,7 +98,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<TransformComponent>(64, 64, 3, 3);
 	cout << player.getComponent<TransformComponent>().position.x << " " << player.getComponent<TransformComponent>().position.y << endl;
 	//gives our player a sprite component and sets it to ninjagirl_66x88.png
-	player.addComponent<SpriteComponent>("Assets/slime_animated_64x64_15x15x5x5x5x5_frames.png", true);
+	player.addComponent<SpriteComponent>("player", true);
 	//let us control our player among other things
 	player.addComponent<KeyBoardController>();
 	//add collision detection to our player and give it the player tag
@@ -96,14 +106,18 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	//adds player to groupPlayers groupLabel
 	player.addGroup(groupPlayers);
 
-
-
+	assets->CreateProjectile(Vector2D(600, 600),Vector2D(0,0), 900, 2, 0, false);
+	assets->CreateProjectile(Vector2D(700, 600), Vector2D(2, 0), 100, 2, 0, true);
+	assets->CreateProjectile(Vector2D(500, 600), Vector2D(-2, 0), 300, 2, 0, true);
+	assets->CreateProjectile(Vector2D(900, 600), Vector2D(-1, 1), 500, 2, 0, true);
+	assets->CreateProjectile(Vector2D(400, 600), Vector2D(1, -1), 700, 2, 0, true);
 
 }
 
 auto& tiles(manager.getGroup(Game::groupMap));
 auto& players(manager.getGroup(Game::groupPlayers));
 auto& colliders(manager.getGroup(Game::groupColliders));
+auto& theProjectiles(manager.getGroup(Game::groupProjectiles));
 void Game::handleEvents() //function for handling game events
 {
 	
@@ -136,6 +150,26 @@ void Game::update()//function for updating the game
 			//player.getComponent<TransformComponent>().xvel = 0;//stop movement in x direction
 			//player.getComponent<TransformComponent>().yvel = 0;//stop movement in y direction
 			player.getComponent<TransformComponent>().position = playerPos;//reset position to where it was
+		}
+	}
+
+	for (auto&p : theProjectiles)
+	{
+		
+		if (Collision::AABB(playerCol, p->getComponent<ColliderComponent>().collider))//if player hits a collider
+		{
+			std::cout << "the player was burned to ash" << std::endl;
+			//for now just for fun we will make a new one even though it's gonna be resource intensive
+			//p->getComponent<TransformComponent>().position = Vector2D(600,600);
+			//cout << p->getComponent<TransformComponent>().position << endl;
+			/*assets->CreateProjectile(p->getComponent<ProjectileComponent>().initPosition,
+									 p->getComponent<ProjectileComponent>().velocity,
+									 p->getComponent<ProjectileComponent>().range, 
+									 p->getComponent<ProjectileComponent>().speed, 
+									 p->getComponent<ProjectileComponent>().projectileIndex, 
+									 p->getComponent<ProjectileComponent>().isAnimated);
+									 */
+			//p->destroy();//destroy the projectile
 		}
 	}
 
@@ -180,6 +214,12 @@ void Game::render()//function for rendering the game
 	{
 		p->draw();
 	}
+	for (auto& p : theProjectiles)
+	{
+		p->draw();
+	}
+
+
 
 	//this is where we add stuff to render
 	//order determines layer.. first in the back last in the front

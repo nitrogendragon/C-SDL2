@@ -2,11 +2,11 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "Map.h"
-
-
 #include <iostream>
 #include <vector> 
-//declaration of ColliderComponent
+//forward declaration of AssetManager
+class AssetManager;
+//forward declaration of ColliderComponent
 class ColliderComponent;
 using namespace std;
 class Game
@@ -31,13 +31,14 @@ public:
 	static SDL_Event event;
 	static bool isRunning;//is the game running?
 	static SDL_Rect camera;//camera object for the game
-	
+	static AssetManager* assets;
 	enum groupLabels : std::size_t
 	{
 		groupMap,
 		groupPlayers,
 		groupEnemies,
-		groupColliders
+		groupColliders,
+		groupProjectiles
 	};
 private:
 	int cnt = 0;//cnt for various purposes but mostly not needed

@@ -1,9 +1,8 @@
 #pragma once
-
 #include "ECS.h"
 #include "TransformComponent.h"
 #include "SDL.h"
-
+#include "../AssetManager.h"
 //creates a TileComponent
 //constructor form is as follows (TileComponent(int x, int y, int id, int h, int w)
 //x and y starting rendering points, w and h size parameters, id for identifying specific tiles
@@ -22,11 +21,10 @@ public:
 	{
 		SDL_DestroyTexture(texture);
 	}
-	//set up tile position and dimensions...
-	
-	TileComponent(int srcX, int srcY, int xpos, int ypos,int tsize, int tscale, const char* path)
+	//set up tile position and dimensions... takes in int srcX, int srcY, int xpos, int ypos,int tsize, int tscale, std::string id
+	TileComponent(int srcX, int srcY, int xpos, int ypos,int tsize, int tscale, std::string id)
 	{
-		texture = TextureManager::LoadTexture(path);
+		texture = Game::assets->GetTexture(id);
 		position.x = xpos;
 		position.y = ypos;
 		srcRect.x = srcX;

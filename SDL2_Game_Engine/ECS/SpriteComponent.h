@@ -4,7 +4,8 @@
 #include "../TextureManager.h"
 #include "Animation.h"
 #include<map>;
-
+#include "../AssetManager.h"
+#include "ProjectileComponent.h"
 class SpriteComponent: public Component
 {
 private:
@@ -22,30 +23,27 @@ private:
 	int speed = 100;
 	//the current frame we are on
 	int curFrame = 0;
-
-	
-	
 	
 public:
 
 	int animIndex = 0;
-
-	SpriteComponent() = default;
 	//hold animations, taking in animation name, and an Animation object called animations
 	std::map<const char*, Animation> animations;
-	
+
 	SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
 
+	SpriteComponent() = default;
+	
 	//create sprite component based path to texture img, starting img render points, number of horizontalxvertical pixels of source to render, and scaling
-	SpriteComponent(const char* path)
+	SpriteComponent(std::string id)
 	{
 		//creates texture by loading our image using setTex function defined after our function here
-		setTex(path);
+		setTex(id);
 	
 	}
 
-	//create sprite component uaing path to texture img, and whether its animated or not 
-	SpriteComponent(const char* path, bool isAnimated)
+	//create sprite component using textures tag id passed as a string, and whether its animated or not 
+	SpriteComponent(string id, bool isAnimated)
 	{
 		animated = isAnimated;
 
@@ -53,32 +51,39 @@ public:
 		Animation blast = Animation(1, 15, 100);
 		Animation rollRight = Animation(2, 5, 50);
 		Animation rollLeft = Animation(3, 5, 50);
-		Animation rollUp = Animation(5, 5, 50);
 		Animation rollDown = Animation(4, 5, 50);
+		Animation rollUp = Animation(5, 5, 50);
+		Animation slimeKiBlast = Animation(0, 7, 50);
+		
 		animations.emplace("Idle", idle);
 		animations.emplace("Blast", blast);
 		animations.emplace("RollRight", rollRight);
 		animations.emplace("RollLeft", rollLeft);
 		animations.emplace("RollUp", rollUp);
 		animations.emplace("RollDown", rollDown);
-
+		animations.emplace("SlimeKiBlast", slimeKiBlast);
 		
-		setTex(path);
-		Play("Idle");
-
+		setTex(id);
+		if (id == "player")
+		{
+			Play("Idle");
+		}
+		else if (id == projectiles[0] || "slime_ki_blast")//slime_ki_blast
+		{
+			Play("SlimeKiBlast");
+		}
 	}
 
-	//deconstructor to destroy texture when gone
+	//deconstructor to destroy texture when gone..not using anymore probably
 	~SpriteComponent()
 	{
-		//destroying our texture
-		SDL_DestroyTexture(texture);
+	
 	}
 
-	//set texture function taking in a path to a img so that we can set or swap textures
-	void setTex(const char* path)
+	//set texture function taking in string id in assets to grab texture from its textures map so that we can set or swap textures
+	void setTex(std::string id)
 	{
-		texture = TextureManager::LoadTexture(path);
+		texture = Game::assets->GetTexture(id);
 	}
 
 	void init() override

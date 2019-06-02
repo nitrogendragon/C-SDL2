@@ -3,7 +3,7 @@
 class Map
 {
 public:
-	Map(const char* mfp, int ms, int ts);
+	Map(std::string tID, int ms, int ts);//takes in tileID tID, mapscale ms, and tilesize ts
 	~Map();
 	//loads our map from the file we choose. takes in (string path, int sizeX, int sizeY) 
 	//filename path, X and Y # of tiles to the map
@@ -12,7 +12,7 @@ public:
 	void AddTile(int srcX, int srcY, int xpos, int ypos);
 	
 private:
-	const char* mapFilePath;
+	std::string texID;
 	int mapScale;
 	int tileSize;
 	int scaledSize;
