@@ -16,7 +16,7 @@ public:
 	//gameobjects
 	//creates our projectiles taking in Vector2D position, vector2D velocity, range, speed, projectiles index within the projectiles array, and a isAnim bool to know if it is animated
 	void CreateProjectile(Vector2D pos, Vector2D vel, int range, int speed, int projectilesIndex, bool isAnim);
-
+	
 
 
 	//texture management
@@ -25,7 +25,7 @@ public:
 private:
 	std::map<std::string, SDL_Texture*> textures;//map list of our textures, takes in a key value string and a pointer to the texture
 	Manager* manager;
-	
+	;
 	
 };
 

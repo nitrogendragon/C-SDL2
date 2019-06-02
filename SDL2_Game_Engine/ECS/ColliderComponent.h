@@ -63,9 +63,10 @@ public:
 		}
 		else if (tag == "projectile")
 		{
-			collider.w = transform->width * transform->wScale / 3;
+			
+			collider.w = transform->width * transform->wScale;
 			//set up the height value of the box collider based on our transforms height
-			collider.h = transform->height * transform->hScale / 3;
+			collider.h = transform->height * transform->hScale;
 		}
 	}
 	//taking care of position of hit/collider box updating
@@ -86,9 +87,9 @@ public:
 		else if (tag == "projectile")
 		{
 			//setting up our collider x position equal to our transforms position
-			collider.x = static_cast<int>(transform->position.x + (transform->width * transform->wScale));
+			collider.x = static_cast<int>(transform->position.x);
 			//setting up our collider x position equal to our transforms position
-			collider.y = static_cast<int>(transform->position.y + (transform->height * transform->hScale));
+			collider.y = static_cast<int>(transform->position.y);
 			destR = { collider.x, collider.y, collider.w, collider.h };//renders box over player
 		}
 		

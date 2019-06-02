@@ -20,6 +20,7 @@ void AssetManager::CreateProjectile(Vector2D pos, Vector2D vel, int range, int s
 	projectile.addComponent<ColliderComponent>("projectile");
 	projectile.addGroup(Game::groupProjectiles);
 }
+
 //takes in file path and an id for the texture to be added and adds it
 void AssetManager::AddTexture(std::string id, const char* path)
 {

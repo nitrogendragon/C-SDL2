@@ -106,11 +106,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	//adds player to groupPlayers groupLabel
 	player.addGroup(groupPlayers);
 
-	assets->CreateProjectile(Vector2D(600, 600),Vector2D(0,0), 900, 2, 0, false);
-	assets->CreateProjectile(Vector2D(700, 600), Vector2D(2, 0), 100, 2, 0, true);
-	assets->CreateProjectile(Vector2D(500, 600), Vector2D(-2, 0), 300, 2, 0, true);
-	assets->CreateProjectile(Vector2D(900, 600), Vector2D(-1, 1), 500, 2, 0, true);
-	assets->CreateProjectile(Vector2D(400, 600), Vector2D(1, -1), 700, 2, 0, true);
+	assets->CreateProjectile(Vector2D(600, 600),Vector2D(0,0), 1900, 2, 0, false);
+	assets->CreateProjectile(Vector2D(700, 600), Vector2D(2, 0), 1100, 2, 0, true);
+	assets->CreateProjectile(Vector2D(500, 600), Vector2D(-2, 0), 1300, 2, 0, true);
+	assets->CreateProjectile(Vector2D(900, 600), Vector2D(-1, 1), 1500, 2, 0, true);
+	assets->CreateProjectile(Vector2D(400, 600), Vector2D(1, -1), 1700, 2, 0, true);
 
 }
 
@@ -160,16 +160,18 @@ void Game::update()//function for updating the game
 		{
 			std::cout << "the player was burned to ash" << std::endl;
 			//for now just for fun we will make a new one even though it's gonna be resource intensive
-			//p->getComponent<TransformComponent>().position = Vector2D(600,600);
-			//cout << p->getComponent<TransformComponent>().position << endl;
-			/*assets->CreateProjectile(p->getComponent<ProjectileComponent>().initPosition,
-									 p->getComponent<ProjectileComponent>().velocity,
-									 p->getComponent<ProjectileComponent>().range, 
-									 p->getComponent<ProjectileComponent>().speed, 
-									 p->getComponent<ProjectileComponent>().projectileIndex, 
-									 p->getComponent<ProjectileComponent>().isAnimated);
-									 */
-			//p->destroy();//destroy the projectile
+			Vector2D initPos = p->getComponent<ProjectileComponent>().initPosition;
+			bool isAnimated = p->getComponent<ProjectileComponent>().isAnimated;
+			cout << isAnimated;
+			int range = p->getComponent<ProjectileComponent>().range;
+			int speed = p->getComponent<ProjectileComponent>().speed;
+			
+			int projectileIndex = p->getComponent<ProjectileComponent>().projectileIndex;
+			Vector2D velocity = p->getComponent<ProjectileComponent>().velocity;
+			
+			assets->CreateProjectile(initPos,velocity,range, speed, projectileIndex, isAnimated);
+			cout << "we should have created something" << endl;
+			p->destroy();//destroy the projectile
 		}
 	}
 
