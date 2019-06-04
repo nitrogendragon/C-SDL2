@@ -2,7 +2,7 @@
 
 This is a personal project I am working on to familiarize myself some with C++ and SDL2 while doing the thing I enjoy most, making a game.
 
-#Progress
+# Progress
 Currently still in very early stages though depending on time and how things go we will see how far it progresses. Currently have a basic playable character, environment, and just implemented projectiles. Plans are uncertain but some kind of puzzle exploration rpg, or other such similar game is the plan.
 
 ## Installation
