@@ -124,7 +124,7 @@ public:
 	//changes current frames and index needed for changing animation
 	void Play(const char* animName)
 	{
-		cout << "down" << endl;
+		//cout << "down" << endl;
 		frames = animations[animName].frames;
 		animIndex = animations[animName].index;
 		speed = animations[animName].speed;

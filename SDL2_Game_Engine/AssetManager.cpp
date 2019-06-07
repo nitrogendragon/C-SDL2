@@ -11,15 +11,19 @@ AssetManager::~AssetManager()
 
 }
 
-void AssetManager::CreateProjectile(Vector2D pos, Vector2D vel, int xscale, int yscale, int range, int speed, int projectilesIndex, bool isAnim = false)
+void AssetManager::CreateProjectile(Vector2D pos, Vector2D vel, int xscale, int yscale, int range, int speed, int projectilesIndex, bool isAnim)
 {
+	
 	auto& projectile(manager->addEntity());
 	projectile.addComponent<TransformComponent>(pos.x, pos.y, 32, 32, xscale, yscale);
 	projectile.addComponent<SpriteComponent>(projectiles[projectilesIndex], isAnim);
 	projectile.addComponent<ProjectileComponent>(pos,xscale, yscale, range, speed, vel.x, vel.y,projectilesIndex, isAnim);
 	projectile.addComponent<ColliderComponent>("projectile");
 	projectile.addGroup(Game::groupProjectiles);
+	
+	
 }
+
 
 //takes in file path and an id for the texture to be added and adds it
 void AssetManager::AddTexture(std::string id, const char* path)

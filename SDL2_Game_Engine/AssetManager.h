@@ -14,9 +14,10 @@ public:
 	~AssetManager();
 
 	//gameobjects
-	//creates our projectiles taking in Vector2D position, vector2D velocity,x and y scale, range, speed, projectiles index within the projectiles array, and a isAnim bool to know if it is animated
-	void CreateProjectile(Vector2D pos, Vector2D vel, int xscale, int yscale, int range, int speed, int projectilesIndex, bool isAnim);
-	
+	//creates our projectiles taking in Vector2D position, vector2D velocity,x and y scale, range, speed, projectiles index within the projectiles array, vIndex index within the entities vector and a isAnim bool to know if it is animated
+	void CreateProjectile(Vector2D pos, Vector2D vel, int xscale, int yscale, int range, int speed, int projectilesIndex, bool isAnim = false);
+	//resets the projectile
+
 
 
 	//texture management

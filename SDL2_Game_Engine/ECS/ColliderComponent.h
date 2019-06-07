@@ -25,9 +25,10 @@ public:
 	//collider needs access to transform component  so pointer to transform
 	TransformComponent* transform;
 	//constructor to set up tag for now
-	ColliderComponent(string t)
+	ColliderComponent(string t, std::string id = "boxcol")
 	{
 		tag = t;
+		tex = Game::assets->GetTexture(id);
 	}
 	//more complex constructor taking in position and size information
 	ColliderComponent(string t, int xpos, int ypos, int size)
@@ -50,7 +51,7 @@ public:
 		transform = &entity->getComponent<TransformComponent>();
 
 
-		tex = TextureManager::LoadTexture("assets/boxcoltex_32x32.png");//loads our collider texture
+		//tex = TextureManager::LoadTexture("assets/boxcoltex_32x32.png");//loads our collider texture
 		
 		srcR = { 0,0,32,32 };//the origin point in upper left bounds 0,0 for starting the rect and its dims 32x32
 		

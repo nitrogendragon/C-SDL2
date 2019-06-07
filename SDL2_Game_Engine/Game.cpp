@@ -25,7 +25,7 @@ SDL_Rect playerCol;//variable for holding our players collider
 Vector2D playerPos = NULL;//variable for holding our players collider
 bool Game::isRunning = false;
 //creates and adds a player Entity to our manager
-auto& player(manager.addEntity());
+Entity& player(manager.addEntity());
 ProjectileComponent pComponents;
 //holds players xvel as an int..
 int pVelX = NULL;
@@ -84,7 +84,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assets->AddTexture("terrain", "Assets/WorldPieces_32x32.png");
 	assets->AddTexture("player", "Assets/slime_animated_64x64_15x15x5x5x5x5_frames.png");
 	assets->AddTexture("slime_ki_blast", "Assets/slime_ki_blast_32x32_7.png");
-
+	assets->AddTexture("boxcol", "assets/boxcoltex_32x32.png");
 	//make a new Map map
 	map1 = new Map("terrain", 3, 32);
 
@@ -97,7 +97,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	*also note that for whatever reason the window is backwards so winHeight seems to deal with width and visa versa for winWidth
 	*/
 	player.addComponent<TransformComponent>(64, 64, 3, 3);
-	cout << player.getComponent<TransformComponent>().position.x << " " << player.getComponent<TransformComponent>().position.y << endl;
+	//cout << player.getComponent<TransformComponent>().position.x << " " << player.getComponent<TransformComponent>().position.y << endl;
 	//gives our player a sprite component and sets it to ninjagirl_66x88.png
 	player.addComponent<SpriteComponent>("player", true);
 	//let us control our player among other things
@@ -106,13 +106,12 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<ColliderComponent>("player");
 	//adds player to groupPlayers groupLabel
 	player.addGroup(groupPlayers);
-
-	assets->CreateProjectile(Vector2D(600, 600),Vector2D(0,0),3,3, 1900, 2, 0, false);
+	assets->CreateProjectile(Vector2D(600, 600), Vector2D(0, 0), 3, 3, 1900, 2, 0, false);
 	assets->CreateProjectile(Vector2D(700, 600), Vector2D(2, 0),3,3, 1100, 2, 0, true);
 	assets->CreateProjectile(Vector2D(500, 600), Vector2D(-2, 0),2,2, 1300, 2, 0, true);
 	assets->CreateProjectile(Vector2D(900, 600), Vector2D(-1, 1),4,4, 1500, 2, 0, true);
 	assets->CreateProjectile(Vector2D(400, 600), Vector2D(1, -1),5,5, 1700, 2, 0, true);
-
+	
 }
 
 auto& tiles(manager.getGroup(Game::groupMap));
@@ -142,8 +141,8 @@ void Game::update()//function for updating the game
 	manager.refresh();
 	//runs the managers update function to update all the components
 	manager.update();
-
-	for (auto&c : colliders)
+	
+	for (Entity*c : colliders)
 	{
 		SDL_Rect cCol = c->getComponent<ColliderComponent>().collider;
 		if (Collision::AABB(cCol, playerCol))//if player hits a collider
@@ -153,14 +152,16 @@ void Game::update()//function for updating the game
 			player.getComponent<TransformComponent>().position = playerPos;//reset position to where it was
 		}
 	}
-	for (Entity * p : theProjectiles)
+	for (Entity *p : theProjectiles)
 	{
+		
 		
 		
 		if (Collision::AABB(playerCol, p->getComponent<ColliderComponent>().collider))//if player hits a collider
 		{
 			pComponents.resetProjectile(p);
 			p->destroy();
+			
 		}
 	}
 	//tileManager.ScrollTiles(player,tiles);
@@ -191,20 +192,20 @@ void Game::render()//function for rendering the game
 	SDL_RenderClear(renderer);//clears the rendering target which in this case is our Game class renderer
 	
 	//draws our tiles for our map
-	for (auto& t : tiles)
+	for (Entity* t : tiles)
 	{
 		t->draw();
 	}
-	for (auto& c : colliders)
+	for (Entity* c : colliders)
 	{
 		c->draw();
 	}
 	//draws our players
-	for (auto& p : players)
+	for (Entity* p : players)
 	{
 		p->draw();
 	}
-	for (auto& p : theProjectiles)
+	for (Entity* p : theProjectiles)
 	{
 		p->draw();
 	}

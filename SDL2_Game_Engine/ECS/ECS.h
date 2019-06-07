@@ -45,14 +45,15 @@ class Component
 {
 public:
 	//pointer  to its owner
-	Entity* entity;
+	Entity *entity;
+	
 	//using virtual so we can override the functions
 	//init can get access to other components
 	virtual void init(){}
 
 	virtual void update(){}
 	virtual void draw(){}
-	virtual ~Component(){}
+	virtual ~Component() {  };
 
 };
 
@@ -79,6 +80,7 @@ private:
 	GroupBitSet groupBitset;
 	//groupbitset
 public:
+	
 	//Manager reference for member manager, 
 	//everytime we create an entity we'll pass in a manager so we have a reference to our membersManager
 	Entity(Manager& mManager) : manager(mManager){}
@@ -152,11 +154,12 @@ public:
 class Manager
 {
 private:
-	/*making a vector array to hold the entities we will be managing*/
-	vector<unique_ptr<Entity>> entities;
+	
 	//array of our grouped entities of size maxGroups
 	std::array<std::vector<Entity*>, maxGroups> groupedEntities;
 public:
+	/*making a vector array to hold the entities we will be managing*/
+	vector<unique_ptr<Entity>> entities;
 	//basically for entity e in vector array entities.. update it
 	void update()
 	{
@@ -168,28 +171,8 @@ public:
 		for (auto& e : entities) e->draw();
 	}
 	//every frame move through our entities and remove the ones that aren't there(no longer active) from our groups
-	void refresh()
-	{
-		for (auto i(0u); i < maxGroups; i++)
-		{
-			auto& v(groupedEntities[i]);
-			v.erase
-			(
-				std::remove_if(std::begin(v), std::end(v), 
-					[i](Entity* mEntity)
-			{
-				return !mEntity->isActive() || !mEntity->hasGroup(i);
-			}),
-				std::end(v));
-		}
-
-		entities.erase(std::remove_if(std::begin(entities), std::end(entities),
-			[](const std::unique_ptr<Entity> &mEntity)
-		{
-			return !mEntity->isActive();
-		}),
-			end(entities));
-	}
+	void refresh();
+	
 	//Adds our entity to the group
 	void AddToGroup(Entity* mEntity, Group mGroup)
 	{
