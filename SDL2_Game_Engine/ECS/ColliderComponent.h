@@ -31,13 +31,13 @@ public:
 		tex = Game::assets->GetTexture(id);
 	}
 	//more complex constructor taking in position and size information
-	ColliderComponent(string t, int xpos, int ypos, int size)
+	ColliderComponent(string t, int xpos, int ypos, int size, std::string id = "boxcol")
 	{
 		tag = t;
 		collider.x = xpos;
 		collider.y = ypos;
 		collider.h = collider.w = size;
-		
+		tex = Game::assets->GetTexture(id);
 	}
 	//override our initializer function
 	void init() override
