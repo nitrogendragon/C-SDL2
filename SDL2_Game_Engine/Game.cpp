@@ -8,6 +8,7 @@
 #include "ECS/TransformComponent.h"
 #include "AssetManager.h"
 #include "ECS/ProjectileComponent.h"
+#include <sstream>
 using namespace std;
 Map* map1;
 SDL_Renderer* Game::renderer = nullptr;
@@ -26,6 +27,10 @@ Vector2D playerPos = NULL;//variable for holding our players collider
 bool Game::isRunning = false;
 //creates and adds a player Entity to our manager
 Entity& player(manager.addEntity());
+
+//creates a label Entity reference and adds it to our manager 
+Entity& label(manager.addEntity());
+//forward declaration of our projectile components
 ProjectileComponent pComponents;
 //holds players xvel as an int..
 int pVelX = NULL;
@@ -79,12 +84,20 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = true;//we are running
 	}
 
+
+	if (TTF_Init() == -1)
+	{
+		std::cout << "Error : SDL_TTF" << std::endl;
+	}
 	//Adding our textures to our assets manager
 
 	assets->AddTexture("terrain", "Assets/WorldPieces_32x32.png");
 	assets->AddTexture("player", "Assets/slime_animated_64x64_15x15x5x5x5x5_frames.png");
 	assets->AddTexture("slime_ki_blast", "Assets/slime_ki_blast_32x32_7.png");
 	assets->AddTexture("boxcol", "assets/boxcoltex_32x32.png");
+
+	//adding a font to our fonts
+	assets->AddFont("timesbd", "assets/timesbd.ttf", 16);
 	//make a new Map map
 	map1 = new Map("terrain", 3, 32);
 
@@ -106,6 +119,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<ColliderComponent>("player");
 	//adds player to groupPlayers groupLabel
 	player.addGroup(groupPlayers);
+	//creates the color white
+	SDL_Color white = { 100, 100, 100, 255 };
+	label.addComponent<UILabel>(100, 100, "Test String", "timesbd", white);
+
 	assets->CreateProjectile(Vector2D(600, 600), Vector2D(0, 0), 3, 3, 1900, 2, 0, false);
 	assets->CreateProjectile(Vector2D(700, 600), Vector2D(2, 0),3,3, 1100, 2, 0, true);
 	assets->CreateProjectile(Vector2D(500, 600), Vector2D(-2, 0),2,2, 1300, 2, 0, true);
@@ -138,6 +155,11 @@ void Game::update()//function for updating the game
 	playerCol = player.getComponent<ColliderComponent>().collider;//variable for holding our players collider
 	playerPos = player.getComponent<TransformComponent>().position;//variable for holding our player position
 	//moving through our games entities each frame and getting rid of those that aren't there/active anymore
+
+	std::stringstream ss;
+	ss << "Player position " << playerPos;
+	label.getComponent<UILabel>().SetLabelText(ss.str(), "arial");
+
 	manager.refresh();
 	//runs the managers update function to update all the components
 	manager.update();
@@ -210,7 +232,7 @@ void Game::render()//function for rendering the game
 		p->draw();
 	}
 
-
+	label.draw();
 
 	//this is where we add stuff to render
 	//order determines layer.. first in the back last in the front
