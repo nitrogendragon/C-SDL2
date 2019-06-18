@@ -158,7 +158,7 @@ void Game::update()//function for updating the game
 
 	std::stringstream ss;
 	ss << "Player position " << playerPos;
-	label.getComponent<UILabel>().SetLabelText(ss.str(), "arial");
+	label.getComponent<UILabel>().SetLabelText(ss.str(), "timesbd");
 
 	manager.refresh();
 	//runs the managers update function to update all the components
