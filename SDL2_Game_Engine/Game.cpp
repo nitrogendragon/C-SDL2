@@ -15,6 +15,9 @@ SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;//SDL_Event event variable
 //creates a Manager class instance manager in our game
 Manager manager;
+
+
+
 //creates a tilecomponent instance
 //TileComponent tileManager;
 
@@ -95,6 +98,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assets->AddTexture("player", "Assets/slime_animated_64x64_15x15x5x5x5x5_frames.png");
 	assets->AddTexture("slime_ki_blast", "Assets/slime_ki_blast_32x32_7.png");
 	assets->AddTexture("boxcol", "assets/boxcoltex_32x32.png");
+	assets->AddTexture("PlayerFGHB", "HealthBarFG_150x25.png");
+	assets->AddTexture("PlayerBGHB","BGroundHealthBar150x25.png" );
+	assets->AddTexture("PlayerBorderHB", "BorderHealthBar_150x25.png");
+	
 
 	//adding a font to our fonts
 	assets->AddFont("timesbd", "assets/timesbd.ttf", 16);
@@ -117,6 +124,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<KeyBoardController>();
 	//add collision detection to our player and give it the player tag
 	player.addComponent<ColliderComponent>("player");
+	//adds health to our player
+	
+	player.addComponent<Health>();
+	
 	//adds player to groupPlayers groupLabel
 	player.addGroup(groupPlayers);
 	//creates the color white
@@ -154,12 +165,25 @@ void Game::update()//function for updating the game
 {
 	playerCol = player.getComponent<ColliderComponent>().collider;//variable for holding our players collider
 	playerPos = player.getComponent<TransformComponent>().position;//variable for holding our player position
-	//moving through our games entities each frame and getting rid of those that aren't there/active anymore
-
+	//need to update... clean memory so that ram isn't getting continuously eaten..probably in uilabelcomponent.h file
+	//
+	//
+	//
+	//
+	//
+	/*
 	std::stringstream ss;
 	ss << "Player position " << playerPos;
 	label.getComponent<UILabel>().SetLabelText(ss.str(), "timesbd");
-
+	*/
+	//
+	//
+	//
+	//
+	//
+	player.getComponent<Health>().RenderPlayerHealth();
+	
+	//moving through our games entities each frame and getting rid of those that aren't there/active anymore
 	manager.refresh();
 	//runs the managers update function to update all the components
 	manager.update();
