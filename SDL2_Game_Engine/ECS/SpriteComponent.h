@@ -3,7 +3,7 @@
 #include "SDL.h"
 #include "../TextureManager.h"
 #include "Animation.h"
-#include<map>;
+#include<map>
 #include "../AssetManager.h"
 #include "ProjectileComponent.h"
 class SpriteComponent: public Component
@@ -14,18 +14,20 @@ private:
 	//texture for the sprite 
 	SDL_Texture *texture;
 	//rects for sizing and scaling sprite
-	SDL_Rect srcRect, destRect;
+	
 	//are we animated?
 	bool animated = false;
 	//# of frames
 	int frames = 0;
 	//delay between frames in miliseconds
-	int speed = 100;
+	int speed = 200;
 	//the current frame we are on
 	int curFrame = 0;
 	
 public:
-
+	std::string spriteid="";
+	//rect for our 
+	SDL_Rect srcRect, destRect;
 	int animIndex = 0;
 	//hold animations, taking in animation name, and an Animation object called animations
 	std::map<const char*, Animation> animations;
@@ -37,6 +39,7 @@ public:
 	//create sprite component based path to texture img, starting img render points, number of horizontalxvertical pixels of source to render, and scaling
 	SpriteComponent(std::string id)
 	{
+		spriteid = id;
 		//creates texture by loading our image using setTex function defined after our function here
 		setTex(id);
 	
@@ -45,8 +48,9 @@ public:
 	//create sprite component using textures tag id passed as a string, and whether its animated or not 
 	SpriteComponent(string id, bool isAnimated)
 	{
+		spriteid = id;
 		animated = isAnimated;
-
+		Animation playerlife = Animation(0, 10, 200);
 		Animation idle = Animation(0, 15, 50);
 		Animation blast = Animation(1, 15, 100);
 		Animation rollRight = Animation(2, 5, 50);
@@ -62,11 +66,16 @@ public:
 		animations.emplace("RollUp", rollUp);
 		animations.emplace("RollDown", rollDown);
 		animations.emplace("SlimeKiBlast", slimeKiBlast);
-		
+		animations.emplace("PlayerLife", playerlife);
 		setTex(id);
 		if (id == "player")
 		{
 			Play("Idle");
+		}
+		else if (id == "PlayerFGHB")
+		{
+			Play("PlayerLife");
+			cout << "we are playing playerlife" << endl;
 		}
 		else if (id == projectiles[0] || "slime_ki_blast")//slime_ki_blast
 		{

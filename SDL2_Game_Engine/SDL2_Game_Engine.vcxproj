@@ -139,7 +139,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="ECS\Components.h" />
     <ClInclude Include="ECS\ECS.h" />
-    <ClInclude Include="ECS\Health.h" />
+    <ClInclude Include="ECS\HealthComponent.h" />
     <ClInclude Include="ECS\KeyBoardController.h" />
     <ClInclude Include="ECS\ProjectileComponent.h" />
     <ClInclude Include="ECS\TileComponent.h" />

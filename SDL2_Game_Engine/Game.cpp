@@ -8,6 +8,7 @@
 #include "ECS/TransformComponent.h"
 #include "AssetManager.h"
 #include "ECS/ProjectileComponent.h"
+#include "ECS/HealthComponent.h"
 #include <sstream>
 using namespace std;
 Map* map1;
@@ -35,6 +36,8 @@ Entity& player(manager.addEntity());
 Entity& label(manager.addEntity());
 //forward declaration of our projectile components
 ProjectileComponent pComponents;
+//forward declaration of our health components
+HealthComponent healthbars;
 //holds players xvel as an int..
 int pVelX = NULL;
 //holds players y velocity as an int..
@@ -98,9 +101,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assets->AddTexture("player", "Assets/slime_animated_64x64_15x15x5x5x5x5_frames.png");
 	assets->AddTexture("slime_ki_blast", "Assets/slime_ki_blast_32x32_7.png");
 	assets->AddTexture("boxcol", "assets/boxcoltex_32x32.png");
-	assets->AddTexture("PlayerFGHB", "HealthBarFG_150x25.png");
-	assets->AddTexture("PlayerBGHB","BGroundHealthBar150x25.png" );
-	assets->AddTexture("PlayerBorderHB", "BorderHealthBar_150x25.png");
+	assets->AddTexture("PlayerFGHB", "Assets/HealthBarFG_1500x25.png");
+	assets->AddTexture("PlayerBGHB","Assets/BGroundHealthBar_150x25.png" );
+	assets->AddTexture("PlayerBorderHB", "Assets/BorderHealthBar_150x25.png");
 	
 
 	//adding a font to our fonts
@@ -124,9 +127,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<KeyBoardController>();
 	//add collision detection to our player and give it the player tag
 	player.addComponent<ColliderComponent>("player");
-	//adds health to our player
+	//add HealthComponent to our player
+	player.addComponent<HealthComponent>();
 	
-	player.addComponent<Health>();
 	
 	//adds player to groupPlayers groupLabel
 	player.addGroup(groupPlayers);
@@ -134,17 +137,25 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	SDL_Color white = { 100, 100, 100, 255 };
 	label.addComponent<UILabel>(100, 100, "Test String", "timesbd", white);
 
-	assets->CreateProjectile(Vector2D(600, 600), Vector2D(0, 0), 3, 3, 1900, 2, 0, false);
+	assets->CreateProjectile(Vector2D(600, 600), Vector2D(0, 0), 3, 3, 1900, 2, 0, true);
 	assets->CreateProjectile(Vector2D(700, 600), Vector2D(2, 0),3,3, 1100, 2, 0, true);
 	assets->CreateProjectile(Vector2D(500, 600), Vector2D(-2, 0),2,2, 1300, 2, 0, true);
 	assets->CreateProjectile(Vector2D(900, 600), Vector2D(-1, 1),4,4, 1500, 2, 0, true);
 	assets->CreateProjectile(Vector2D(400, 600), Vector2D(1, -1),5,5, 1700, 2, 0, true);
 	
+	//test health bar for player
+	assets->CreateHealthBar(Vector2D(0, 0), 150, 25, 1.0f, "PlayerFGHB",true);
+	//creates our background for the healthbar
+	assets->CreateHealthBarBorder(Vector2D(0, 0), 150, 25, 1.0f, "PlayerBorderHB");
+	assets->CreateHealthBarBG(Vector2D(0, 0), 150, 25, 1.0f, "PlayerBGHB");
 }
 
 auto& tiles(manager.getGroup(Game::groupMap));
 auto& players(manager.getGroup(Game::groupPlayers));
 auto& colliders(manager.getGroup(Game::groupColliders));
+auto& hbars(manager.getGroup(Game::HealthBars));
+auto& hbarborder(manager.getGroup(Game::HealthBarBorder));
+auto& hbarbg(manager.getGroup(Game::HealthBarBackGround));
 std::vector<Entity*> &theProjectiles(manager.getGroup(Game::groupProjectiles));
 void Game::handleEvents() //function for handling game events
 {
@@ -181,7 +192,7 @@ void Game::update()//function for updating the game
 	//
 	//
 	//
-	player.getComponent<Health>().RenderPlayerHealth();
+	
 	
 	//moving through our games entities each frame and getting rid of those that aren't there/active anymore
 	manager.refresh();
@@ -196,6 +207,8 @@ void Game::update()//function for updating the game
 			//player.getComponent<TransformComponent>().xvel = 0;//stop movement in x direction
 			//player.getComponent<TransformComponent>().yvel = 0;//stop movement in y direction
 			player.getComponent<TransformComponent>().position = playerPos;//reset position to where it was
+			//basic damage taking
+			
 		}
 	}
 	for (Entity *p : theProjectiles)
@@ -206,9 +219,24 @@ void Game::update()//function for updating the game
 		if (Collision::AABB(playerCol, p->getComponent<ColliderComponent>().collider))//if player hits a collider
 		{
 			pComponents.resetProjectile(p);
+
+			player.getComponent<HealthComponent>().newPercent -= .05f;
+			cout << player.getComponent<HealthComponent>().newPercent << endl;
 			p->destroy();
 			
 		}
+	}
+	for (Entity *h : hbars)
+	{
+		h->getComponent<HealthComponent>().UpdateHPBar(0, 0, 25, 150, player.getComponent<HealthComponent>().newPercent, &player, h);
+	}
+	for (Entity *h : hbarbg)
+	{
+		h->getComponent<HealthComponent>().UpdateHPBar(0, 0, 25, 150, 1.f, &player, h);
+	}
+	for (Entity *h : hbarborder)
+	{
+		h->getComponent<HealthComponent>().UpdateHPBar(0, 0, 25, 150,1.f, &player, h);
 	}
 	//tileManager.ScrollTiles(player,tiles);
 
@@ -238,6 +266,7 @@ void Game::render()//function for rendering the game
 	SDL_RenderClear(renderer);//clears the rendering target which in this case is our Game class renderer
 	
 	//draws our tiles for our map
+	
 	for (Entity* t : tiles)
 	{
 		t->draw();
@@ -246,16 +275,30 @@ void Game::render()//function for rendering the game
 	{
 		c->draw();
 	}
+	for (Entity* p : theProjectiles)
+	{
+		p->draw();
+	}
 	//draws our players
 	for (Entity* p : players)
 	{
 		p->draw();
 	}
-	for (Entity* p : theProjectiles)
+	for (Entity* h : hbarbg)
 	{
-		p->draw();
+		h->draw();
+		
 	}
-
+	for (Entity* h : hbars)
+	{
+		h->draw();
+		
+	}
+	for (Entity* h : hbarborder)
+	{
+		h->draw();
+		
+	}
 	label.draw();
 
 	//this is where we add stuff to render

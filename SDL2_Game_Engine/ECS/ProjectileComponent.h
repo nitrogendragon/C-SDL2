@@ -5,7 +5,7 @@
 #include <math.h>
 
 //holds the names of our projectiles
-static std::string projectiles[100] = { "slime_ki_blast" };
+static std::string projectiles[100] = { "slime_ki_blast" ,"PlayerFGHB"};
 //constructor takes in range, speed, and vector2D velocity
 class ProjectileComponent : public Component
 {

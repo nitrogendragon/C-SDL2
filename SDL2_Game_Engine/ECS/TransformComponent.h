@@ -51,7 +51,7 @@ public:
 	}
 
 	// sets position of the entity as well as height, width and scaling use if not setting via Sprite
-	TransformComponent(float x , float y , int h, int w, int wscale, int hscale)
+	TransformComponent(float x , float y , int h, int w, int wscale=1, int hscale=1)
 	{
 		position.x = x;
 		position.y = y;

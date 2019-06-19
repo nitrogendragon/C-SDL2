@@ -8,6 +8,8 @@
 class AssetManager;
 //forward declaration of ColliderComponent
 class ColliderComponent;
+
+
 using namespace std;
 class Game
 {
@@ -38,7 +40,10 @@ public:
 		groupPlayers,
 		groupEnemies,
 		groupColliders,
-		groupProjectiles
+		groupProjectiles,
+		HealthBars,
+		HealthBarBackGround,
+		HealthBarBorder
 	};
 private:
 	int cnt = 0;//cnt for various purposes but mostly not needed
