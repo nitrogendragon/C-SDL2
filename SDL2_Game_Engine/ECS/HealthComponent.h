@@ -18,8 +18,7 @@ class HealthComponent : public Component
 {
 private:
 	
-	//position of the healthbar
-	TransformComponent *transform;
+	
 	//holds position of character entity
 	int posx, posy;
 	
@@ -29,7 +28,8 @@ private:
 	int enemyid = 0;
 	
 public:
-	float newPercent = 0.0f;
+	
+	float newPercent = 1.0f;
 	//constructor
 	HealthComponent() {};
 	HealthComponent(bool player, int enemid)
@@ -55,21 +55,20 @@ public:
 	void UpdateHPBar( int x, int y, int h, int w, float percent, Entity* character)
 	{
 		//updating percent health left
-		entity->getComponent<HealthComponent>().curPercent = curPercent;
 		curPercent = percent > 1.f ? 1.f : curPercent < 0.f ? 0.f : percent;
-	
-		
 
-
-	
 		//set  width of fgRect based on percent
 		int pw = (int)((float)w * curPercent);
 		//adjust how much of the bar is drawn
 		int px = x + (w - pw);
-
-		//entity->getComponent<SpriteComponent>().srcRect = { x,y,w,h };
-		entity->getComponent<SpriteComponent>().destRect = { px*2,y*2,pw*2,h*2 };
-		
+		//adjusts healthbar display based on damage taken and also scales it
+		//Adjusts SpriteComponent transforms to alter the life being displayed
+		entity->getComponent<SpriteComponent>().transform->position.x = px;
+		entity->getComponent<SpriteComponent>().transform->width = pw;
+		//Adjusts the actual in game screen position of the healthbar
+		entity->getComponent<TransformComponent>().position = Vector2D(
+			character->getComponent<TransformComponent>().position.x - 400,
+			character->getComponent<TransformComponent>().position.y - 400);
 	}
 
 	//sets up our players health bar 
@@ -81,6 +80,6 @@ public:
 		
 	}
 
-
+	
 	
 };

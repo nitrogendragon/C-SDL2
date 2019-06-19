@@ -114,17 +114,21 @@ public:
 		{
 			srcRect.x = srcRect.w * static_cast<int>((SDL_GetTicks() / speed) % frames);
 		}
+		else
+		{ }
 
 		srcRect.y = animIndex * transform->height;
-
-		//sets our sprites x position to the x position of the entity
-		destRect.x = static_cast<int>(transform->position.x) - Game::camera.x;
-		//sets our sprites y position to the y position of the entity
-		destRect.y = static_cast<int>(transform->position.y) - Game::camera.y;
-		//set up our scaled sprite img 
-		destRect.w = transform->width * transform->wScale;
-		//set up our scaled sprite img
-		destRect.h = transform->height * transform->hScale;
+		
+		
+			//sets our sprites x position to the x position of the entity
+			destRect.x = static_cast<int>(transform->position.x) - Game::camera.x;
+			//sets our sprites y position to the y position of the entity
+			destRect.y = static_cast<int>(transform->position.y) - Game::camera.y;
+			//set up our scaled sprite img 
+			destRect.w = transform->width * transform->wScale;
+			//set up our scaled sprite img
+			destRect.h = transform->height * transform->hScale;
+		
 	}
 	//draws our sprite using the specified texture, pixel selection, and scaling, and sprite orientation via spriteFlip
 	void draw() override
