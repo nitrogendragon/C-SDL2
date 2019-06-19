@@ -144,10 +144,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assets->CreateProjectile(Vector2D(400, 600), Vector2D(1, -1),5,5, 1700, 2, 0, true);
 	
 	//test health bar for player
-	assets->CreateHealthBar(Vector2D(0, 0), 150, 25, 1.0f, "PlayerFGHB",true);
+	assets->CreateHealthBar(Vector2D(0, 0), 150, 25, 5, 0.0f, "PlayerFGHB",true);
 	//creates our background for the healthbar
-	assets->CreateHealthBarBorder(Vector2D(0, 0), 150, 25, 1.0f, "PlayerBorderHB");
-	assets->CreateHealthBarBG(Vector2D(0, 0), 150, 25, 1.0f, "PlayerBGHB");
+	assets->CreateHealthBarBorder(Vector2D(0, 0), 150, 25, 5, 1.0f, "PlayerBorderHB");
+	assets->CreateHealthBarBG(Vector2D(0, 0), 150, 25, 5, 1.0f, "PlayerBGHB");
 }
 
 auto& tiles(manager.getGroup(Game::groupMap));
@@ -219,24 +219,33 @@ void Game::update()//function for updating the game
 		if (Collision::AABB(playerCol, p->getComponent<ColliderComponent>().collider))//if player hits a collider
 		{
 			pComponents.resetProjectile(p);
-
-			player.getComponent<HealthComponent>().newPercent -= .05f;
-			cout << player.getComponent<HealthComponent>().newPercent << endl;
+			//reduce player health which will affect healthbar update
+			if (player.getComponent<HealthComponent>().newPercent >= 0.95f) 
+			{
+				player.getComponent<HealthComponent>().newPercent = 1.f;
+			}
+			else
+			{
+				player.getComponent<HealthComponent>().newPercent += .05f;
+				cout << player.getComponent<HealthComponent>().newPercent << endl;
+			}
 			p->destroy();
 			
 		}
 	}
+	//check our life/healthbars and update
 	for (Entity *h : hbars)
-	{
-		h->getComponent<HealthComponent>().UpdateHPBar(0, 0, 25, 150, player.getComponent<HealthComponent>().newPercent, &player, h);
+	{	//change life display based on player health
+		h->getComponent<HealthComponent>().UpdateHPBar(0, 0, 25, 150, 1.f, &player);
 	}
 	for (Entity *h : hbarbg)
-	{
-		h->getComponent<HealthComponent>().UpdateHPBar(0, 0, 25, 150, 1.f, &player, h);
+	{	//move the background of the healthbar for the player
+		h->getComponent<HealthComponent>().UpdateHPBar(0, 0, 25, 150, player.getComponent<HealthComponent>().newPercent, &player);
 	}
 	for (Entity *h : hbarborder)
 	{
-		h->getComponent<HealthComponent>().UpdateHPBar(0, 0, 25, 150,1.f, &player, h);
+		//move the border of the healthbar for the player
+		h->getComponent<HealthComponent>().UpdateHPBar(0, 0, 25, 150,1.f, &player);
 	}
 	//tileManager.ScrollTiles(player,tiles);
 
@@ -284,15 +293,16 @@ void Game::render()//function for rendering the game
 	{
 		p->draw();
 	}
-	for (Entity* h : hbarbg)
-	{
-		h->draw();
-		
-	}
+	
 	for (Entity* h : hbars)
 	{
 		h->draw();
 		
+	}
+	for (Entity* h : hbarbg)
+	{
+		h->draw();
+
 	}
 	for (Entity* h : hbarborder)
 	{

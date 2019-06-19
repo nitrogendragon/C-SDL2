@@ -23,7 +23,7 @@ void AssetManager::CreateProjectile(Vector2D pos, Vector2D vel, int xscale, int 
 	
 	
 }
-void AssetManager::CreateHealthBar(Vector2D pos, int w, int h, float percent, std::string fgid, bool player,int enemyid)
+void AssetManager::CreateHealthBar(Vector2D pos, int w, int h, int scale, float percent, std::string fgid, bool player,int enemyid)
 {
 	//creates an entity for dealing with the foreground of the healthbar
 	
@@ -37,7 +37,7 @@ void AssetManager::CreateHealthBar(Vector2D pos, int w, int h, float percent, st
 
 }
 
-void AssetManager::CreateHealthBarBorder(Vector2D pos, int w, int h, float percent, std::string borderid)
+void AssetManager::CreateHealthBarBorder(Vector2D pos, int w, int h, int scale, float percent, std::string borderid)
 {
 
 
@@ -49,7 +49,7 @@ void AssetManager::CreateHealthBarBorder(Vector2D pos, int w, int h, float perce
 	healthbarborder.addGroup(Game::HealthBarBorder);
 }
 
-void AssetManager::CreateHealthBarBG(Vector2D pos, int w, int h, float percent, std::string bgid)
+void AssetManager::CreateHealthBarBG(Vector2D pos, int w, int h, int scale, float percent, std::string bgid)
 {
 	//creates an entity for dealing with the background of the healthbar
 	Entity& healthbarbg(manager->addEntity());

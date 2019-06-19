@@ -17,12 +17,12 @@ public:
 	//gameobjects
 	//creates our projectiles taking in Vector2D position, vector2D velocity,x and y scale, range, speed, projectiles index within the projectiles array, vIndex index within the entities vector and a isAnim bool to know if it is animated
 	void CreateProjectile(Vector2D pos, Vector2D vel, int xscale, int yscale, int range, int speed, int projectilesIndex, bool isAnim = false);
-	//renders a health bar taking in Vector2D pos, int x, int y, int w, int h, float percent,std::string fgid, bool player, int enemyid for params
-	void CreateHealthBar(Vector2D pos, int w, int h, float percent, std::string fgid, bool player, int enemyid= 0);
-	//renders healthbar border/background taking in Vector2D pos, int w, int h, float percent, std::string bgid, std::string borderid for params
-	void CreateHealthBarBorder(Vector2D pos, int w, int h, float percent, std::string borderid);
-
-	void CreateHealthBarBG(Vector2D pos, int w, int h, float percent, std::string bgid);
+	//renders a health bar taking in Vector2D pos, int x, int y, int w, int h,int scale, float percent,std::string fgid, bool player, int enemyid for params
+	void CreateHealthBar(Vector2D pos, int w, int h, int scale, float percent, std::string fgid, bool player, int enemyid= 0);
+	//renders healthbar border taking in Vector2D pos, int w, int h, int scale, float percent, std::string bgid, std::string borderid for params
+	void CreateHealthBarBorder(Vector2D pos, int w, int h, int scale, float percent, std::string borderid);
+	//renders healthbar background taking in Vector2D pos, int w, int h, int scale, float percent, std::string bgid, std::string borderid for params
+	void CreateHealthBarBG(Vector2D pos, int w, int h, int scale, float percent, std::string bgid);
 
 	//texture management
 	void AddTexture(std::string id, const char* path);//takes in file path and an id for the texture to be added and adds it

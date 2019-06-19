@@ -9,8 +9,7 @@
 class SpriteComponent: public Component
 {
 private:
-	//reference to the position of the sprite
-	TransformComponent *transform;
+	
 	//texture for the sprite 
 	SDL_Texture *texture;
 	//rects for sizing and scaling sprite
@@ -25,6 +24,8 @@ private:
 	int curFrame = 0;
 	
 public:
+	//reference to the position of the sprite
+	TransformComponent *transform;
 	std::string spriteid="";
 	//rect for our 
 	SDL_Rect srcRect, destRect;
